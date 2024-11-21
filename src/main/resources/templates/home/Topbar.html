@@ -1,78 +1,101 @@
 <div class="container-fluid">
-  <!-- Barra Superior -->
-  <div class="row bg-secondary py-1 px-xl-5">
-    <div class="col-lg-6 d-none d-lg-block">
-      <div class="d-inline-flex align-items-center h-100">
-        <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My Account</button>
-          <div class="dropdown-menu dropdown-menu-right">
-            <button class="dropdown-item" type="button">Sign in</button>
-            <button class="dropdown-item" type="button">Sign up</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Logo y Búsqueda -->
-  <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
-    <div class="col-lg-4">
+  <div class="row align-items-center bg-light py-3 px-3 px-md-5">
+    <div class="col-6 col-md-4">
       <a href="" class="text-decoration-none">
-        <span class="h1 text-uppercase text-primary bg-dark px-2">Comercial</span>
-        <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">EL SOL</span>
+        <span class="h4 text-uppercase text-primary bg-dark px-2">Comercial</span>
+        <span class="h4 text-uppercase text-dark bg-primary px-2 ml-n1">EL SOL</span>
       </a>
     </div>
 
-    <!-- Nueva fila para los enlaces -->
-    <div class="col-lg-8">
-      <div class="d-flex justify-content-end align-items-center">
-        <!-- Formulario de búsqueda -->
-        <form class="d-flex mr-3 flex-grow-1" action="/home/buscarProductos" method="get">
-          <div class="input-group">
-            <input type="text" class="form-control" name="query" placeholder="Search for products">
-            <div class="input-group-append">
-              <!-- Botón de búsqueda -->
-              <button class="btn btn-outline-primary" type="submit">
-                <i class="fa fa-search"></i>
-              </button>
-            </div>
+    <!-- Formulario de búsqueda -->
+    <div class="col-6 col-md-7 d-flex justify-content-between align-items-center">
+      <form class="d-flex w-100" action="/home/buscarProductos" method="get">
+        <div class="input-group w-100">
+          <input type="text" class="form-control" name="query" placeholder="Search for products">
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="submit">
+              <i class="fa fa-search"></i>
+            </button>
           </div>
-        </form>
-        <a href="" class="btn px-0 mr-2">
-          <i class="fas fa-heart" style="color: #ffc107;"></i>
-        </a>
-        <a href="" class="btn px-0">
-          <i class="fas fa-shopping-cart" style="color: #ffc107;"></i>
-        </a>
-        <!-- Icono de usuario y opciones de login/cerrar sesión -->
-        <div class="btn-group" >
-          <button type="button" class="btn px-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-              <i class="fas fa-user" style="color: #ffc107;"></i>
+        </div>
+      </form>
+    </div>
 
-          </button>
-          <div class="dropdown-menu dropdown-menu-right">
-            <!-- Comprobar si hay un usuario en la sesión -->
-            <div th:if="${session.user == null}">
-              <a class="dropdown-item" href="/login">Iniciar sesión</a>
-              <a class="dropdown-item" href="/register">Registrar</a>
-            </div>
-            <div th:if="${session.user != null}">
-              <a class="dropdown-item" href="/profile">Perfil</a>
-              <a class="dropdown-item" href="/logout">Cerrar sesión</a>
+    <!-- Íconos de favoritos, carrito y usuario en pantallas grandes -->
+    <div class="col-md-1 d-none d-md-flex justify-content-end">
+      <a href="" class="btn px-0 mr-2">
+        <i class="fas fa-heart" style="color: #ffc107;"></i>
+      </a>
+      <a href="" class="btn px-0 mr-2">
+        <i class="fas fa-shopping-cart" style="color: #ffc107;"></i>
+      </a>
+      <div class="btn-group">
+        <button type="button" class="btn px-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-user" style="color: #ffc107;"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+          <div th:if="${session.user == null}">
+            <a class="dropdown-item" href="/login">Iniciar sesión</a>
+            <a class="dropdown-item" href="/register">Registrar</a>
+          </div>
+          <div th:if="${session.user != null}">
+            <a class="dropdown-item" href="/profile">Perfil</a>
+            <a class="dropdown-item" href="/logout">Cerrar sesión</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ícono de menú en pantallas pequeñas -->
+    <div class="col-12 d-md-none text-right">
+      <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i> <!-- Ícono de hamburguesa -->
+      </button>
+    </div>
+  </div>
+
+  <!-- Menú de navegación y íconos en pantallas pequeñas -->
+  <div class="row bg-light py-2 px-3 px-md-5">
+    <div class="col-12 collapse" id="navbarNav">
+      <div class="bg-light py-2 px-3">
+        <!-- Menú de navegación -->
+        <a class="text-body mx-3 d-block" href="/">Inicio</a>
+        <a class="text-body mx-3 d-block" href="/home/categorias">Categorías</a>
+        <a class="text-body mx-3 d-block" href="#">Contact</a>
+
+        <!-- Íconos de favoritos, carrito y usuario en el menú desplegable -->
+        <div class="d-flex justify-content-start mt-3">
+          <a href="" class="btn px-0 mr-2">
+            <i class="fas fa-heart" style="color: #ffc107;"></i>
+          </a>
+          <a href="" class="btn px-0 mr-2">
+            <i class="fas fa-shopping-cart" style="color: #ffc107;"></i>
+          </a>
+          <div class="btn-group">
+            <button type="button" class="btn px-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-user" style="color: #ffc107;"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <div th:if="${session.user == null}">
+                <a class="dropdown-item" href="/login">Iniciar sesión</a>
+                <a class="dropdown-item" href="/register">Registrar</a>
+              </div>
+              <div th:if="${session.user != null}">
+                <a class="dropdown-item" href="/profile">Perfil</a>
+                <a class="dropdown-item" href="/logout">Cerrar sesión</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Nueva Fila para About, Contact, Help, FAQs -->
-  <div class="row bg-light py-2 px-xl-5">
-    <div class="col-12 text-center">
-      <div class="d-inline-flex align-items-center">
-        <a class="text-body mx-3" href="/">inicio</a>
-        <a class="text-body mx-3" href="/home/categorias">Categorias</a>
-        <a class="text-body mx-3" href="">Contact</a>
+    <!-- Menú de navegación en pantallas grandes -->
+    <div class="col-12 d-none d-md-block">
+      <div class="d-inline-flex align-items-center justify-content-center">
+        <a class="text-body mx-3" href="/">Inicio</a>
+        <a class="text-body mx-3" href="/home/categorias">Categorías</a>
+        <a class="text-body mx-3" href="#">Contact</a>
       </div>
     </div>
   </div>
