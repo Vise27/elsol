@@ -98,9 +98,9 @@
   .quantity-input {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
-    max-width: 150px;
+    max-width: 160px;
     margin-top: 10px;
   }
 
@@ -140,6 +140,18 @@
     background-color: #e9ecef;
     color: #ccc;
   }
+
+  /* Estilos para alinear el botón de agregar al carrito y el selector de cantidad */
+  .add-to-cart-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .add-to-cart-container button {
+    flex-grow: 1;
+  }
 </style>
 
 <div class="container-fluid pt-5 pb-3">
@@ -172,22 +184,19 @@
               <form th:action="@{/carrito/agregar}" method="post">
                 <input type="hidden" name="productoCodigo" th:value="${producto.codigo}"/>
 
-                <!-- Campo para la cantidad, solo si el usuario está autenticado -->
-                <div class="quantity-input">
-                  <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.nextElementSibling.stepDown()">-</button>
-                  <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" class="form-control" required />
-                  <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.previousElementSibling.stepUp()">+</button>
+                <!-- Contenedor con la cantidad y el botón "Agregar al carrito" -->
+                <div class="add-to-cart-container">
+                  <div class="quantity-input">
+                    <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.nextElementSibling.stepDown()">-</button>
+                    <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" class="form-control" required />
+                    <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.previousElementSibling.stepUp()">+</button>
+                  </div>
+                  <button type="submit" class="btn btn-outline-dark btn-square mt-3">
+                    <i class="fa fa-shopping-cart"></i> Agregar al carrito
+                  </button>
                 </div>
-
-                <button type="submit" class="btn btn-outline-dark btn-square mt-3">
-                  <i class="fa fa-shopping-cart"></i> Agregar al carrito
-                </button>
               </form>
             </div>
-            <div th:if="${session.user == null}">
-              <p>Debes iniciar sesión para agregar productos al carrito.</p>
-            </div>
-
             <!-- Botón para ver detalles del producto -->
             <a class="btn btn-primary mt-2" th:href="@{/home/producto/detalle/{codigo}(codigo=${producto.codigo})}">
               Ver Detalles
