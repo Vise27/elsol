@@ -4,8 +4,17 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 350px;
+    height: 380px;
     position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .product-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   }
 
   .image-container {
@@ -17,26 +26,20 @@
   }
 
   .product-image {
-    height: 100%;
     width: 100%;
-    object-fit: cover;
+    height: 100%;
+    object-fit: cover; /* Garantiza que la imagen cubra completamente el contenedor sin distorsionarse */
+    border-radius: 10px;
+    transition: transform 0.3s ease;
   }
 
+  .product-img:hover .product-image {
+    transform: scale(1.05);
+  }
+
+  /* Eliminar el ícono del carrito al pasar sobre el producto */
   .product-action {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .product-img:hover .product-action {
-    opacity: 1;
+    display: none;
   }
 
   .text-center {
@@ -46,12 +49,96 @@
     justify-content: center;
   }
 
-  /* Centrar el título "Productos" */
+  /* Estilos para el título "Productos" */
   .section-title {
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .section-title span {
+    background-color: #f8f9fa;
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  /* Mejorar la apariencia del botón "Agregar al carrito" */
+  .btn-outline-dark {
+    border-radius: 30px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    width: 100%; /* Hacer que el botón ocupe todo el ancho */
+    font-weight: bold;
+  }
+
+  .btn-outline-dark:hover {
+    background-color: #333;
+    color: white;
+  }
+
+  /* Botón "Ver Detalles" */
+  .btn-primary {
+    border-radius: 30px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    font-weight: bold;
+  }
+
+  .btn-primary:hover {
+    background-color: #007bff;
+    transform: translateY(-2px);
+  }
+
+  /* Estilos para el selector de cantidad */
+  .quantity-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 150px;
+    margin-top: 10px;
+  }
+
+  .quantity-input input {
+    width: 60px;
+    height: 35px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    font-size: 16px;
+    padding: 5px;
+    margin: 0 5px;
+    transition: border-color 0.3s ease;
+  }
+
+  .quantity-input input:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+
+  .quantity-input button {
+    width: 30px;
+    height: 30px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  .quantity-input button:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .quantity-input button:disabled {
+    background-color: #e9ecef;
+    color: #ccc;
   }
 </style>
 
@@ -80,13 +167,19 @@
             </div>
             <p class="text-muted small" th:text="'Stock: ' + ${producto.stock} + ' unidades disponibles'"></p>
 
-            <!-- Botón "Agregar al carrito" -->
-            <!-- Mostrar el botón solo si el usuario está autenticado -->
+            <!-- Formulario "Agregar al carrito" solo si el usuario está autenticado -->
             <div th:if="${session.user != null}">
               <form th:action="@{/carrito/agregar}" method="post">
                 <input type="hidden" name="productoCodigo" th:value="${producto.codigo}"/>
-                <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" />
-                <button type="submit" class="btn btn-outline-dark btn-square">
+
+                <!-- Campo para la cantidad, solo si el usuario está autenticado -->
+                <div class="quantity-input">
+                  <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.nextElementSibling.stepDown()">-</button>
+                  <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" class="form-control" required />
+                  <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.previousElementSibling.stepUp()">+</button>
+                </div>
+
+                <button type="submit" class="btn btn-outline-dark btn-square mt-3">
                   <i class="fa fa-shopping-cart"></i> Agregar al carrito
                 </button>
               </form>
