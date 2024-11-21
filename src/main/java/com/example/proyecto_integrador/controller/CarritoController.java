@@ -120,7 +120,7 @@ public class CarritoController {
 
         carritoService.vaciarCarrito(carrito);
 
-        return "redirect:/pago_exito"; // Página de confirmación de pago exitosa
+        return "redirect:/"; // Página de confirmación de pago exitosa
     }
 
     // Método simulado para procesar el pago
@@ -131,7 +131,6 @@ public class CarritoController {
         return true; // Simula un pago exitoso
     }
 
-    // Agregar un producto al carrito
     @PostMapping("/agregar")
     public String agregarProductoAlCarrito(@RequestParam("productoCodigo") Long productoCodigo,
                                            @RequestParam("cantidad") int cantidad,
@@ -146,6 +145,6 @@ public class CarritoController {
             }
         }
 
-        return "redirect:/carrito"; // Redirige al carrito actualizado
+        return "redirect:/carrito";
     }
 }
