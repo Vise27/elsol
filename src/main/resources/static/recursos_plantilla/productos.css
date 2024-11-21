@@ -1,0 +1,47 @@
+/* Ajustar la altura de los elementos del producto */
+.product-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* Asegurar que todas las imágenes tengan el mismo tamaño */
+.image-container {
+  height: 200px; /* Ajusta esta altura según tus necesidades */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-image {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+/* Estilos para la sección de acciones */
+.product-action {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-img:hover .product-action {
+  opacity: 1;
+}
+
+.text-center {
+  min-height: 80px; /* Asegura que haya espacio suficiente para el texto */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>Resultados de Búsqueda</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="/recursos_plantilla/css/style.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- Topbar -->
+<div th:replace="~{home/Topbar}"></div>
+
+<!-- Sección de Resultados de Búsqueda -->
+<div class="container py-5">
+    <h2>Resultados de la búsqueda</h2>
+
+    <!-- Mostrar mensaje si no hay resultados -->
+    <div th:if="${productos.isEmpty()}">
+        <p>No se encontraron productos para la búsqueda.</p>
+    </div>
+
+    <!-- Mostrar productos si existen -->
+    <div class="row" th:unless="${productos.isEmpty()}">
+        <div th:each="producto : ${productos}" class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <a th:href="@{/producto/detalle/{codigo}(codigo=${producto.codigo})}">
+                    <img th:src="${producto.imagen}" class="card-img-top" alt="Imagen del producto">
+                </a>
+                <div class="card-body">
+                    <h4 class="card-title" th:text="${producto.nombre}"></h4>
+                    <h5 th:text="'$' + ${producto.precio}"></h5>
+                    <p class="card-text" th:text="'Stock: ' + ${producto.stock}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="~{home/Footer}"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+<style>
+  /* Ajustar la altura de los elementos del producto */
+  .product-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 350px;
+    position: relative;
+  }
+
+  .image-container {
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .product-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .product-action {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .product-img:hover .product-action {
+    opacity: 1;
+  }
+
+  .text-center {
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Centrar el título "Productos" */
+  .section-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+</style>
+
+<div class="container-fluid pt-5 pb-3">
+  <!-- Título centrado -->
+  <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
+    <span class="bg-secondary pr-3 pl-3">Productos</span>
+  </h2>
+
+  <div class="row justify-content-center px-xl-5">
+    <th:block th:each="producto : ${productos}">
+      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+        <div class="product-item bg-light mb-4">
+          <!-- Contenedor de la imagen del producto -->
+          <div class="product-img position-relative overflow-hidden">
+            <div class="image-container">
+              <!-- Usar directamente la URL completa de la imagen desde la API -->
+              <img class="product-image" th:src="${producto.imagen}" alt="Imagen de [[${producto.nombre}]]">
+            </div>
+          </div>
+
+          <div class="text-center py-4">
+            <a class="h6 text-decoration-none text-truncate" th:text="${producto.nombre}"></a>
+            <div class="d-flex align-items-center justify-content-center mt-2">
+              <h5 th:text="'S/' + ${producto.precio}">Precio</h5>
+            </div>
+            <p class="text-muted small" th:text="'Stock: ' + ${producto.stock} + ' unidades disponibles'"></p>
+
+            <!-- Botón "Agregar al carrito" -->
+            <!-- Mostrar el botón solo si el usuario está autenticado -->
+            <div th:if="${session.user != null}">
+              <form th:action="@{/carrito/agregar}" method="post">
+                <input type="hidden" name="productoCodigo" th:value="${producto.codigo}"/>
+                <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" />
+                <button type="submit" class="btn btn-outline-dark btn-square">
+                  <i class="fa fa-shopping-cart"></i> Agregar al carrito
+                </button>
+              </form>
+            </div>
+            <div th:if="${session.user == null}">
+              <p>Debes iniciar sesión para agregar productos al carrito.</p>
+            </div>
+
+            <!-- Botón para ver detalles del producto -->
+            <a class="btn btn-primary mt-2" th:href="@{/home/producto/detalle/{codigo}(codigo=${producto.codigo})}">
+              Ver Detalles
+            </a>
+          </div>
+        </div>
+      </div>
+    </th:block>
+  </div>
+</div>

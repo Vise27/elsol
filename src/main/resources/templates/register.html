@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Registro</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f4f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .register-container {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        transition: transform 0.2s;
+    }
+    .register-container:hover {
+        transform: scale(1.02);
+    }
+    .register-container h1 {
+        margin-bottom: 20px;
+        color: #333;
+        text-align: center;
+        font-size: 24px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+        font-weight: bold;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+    }
+    .form-group input:focus {
+        border-color: #ffab40;
+        outline: none;
+    }
+    .form-group button {
+        background-color: #ffab40;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+    .form-group button:hover {
+        background-color: #ff6d00;
+    }
+    .error-message {
+        color: red;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .login-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .login-link a {
+        color: #ffab40;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+    @media (max-width: 500px) {
+        .register-container {
+            padding: 20px;
+        }
+        .register-container h1 {
+            font-size: 20px;
+        }
+    }
+  </style>
+</head>
+<body>
+<div class="register-container">
+  <h1>Registro</h1>
+  <div th:if="${param.error}" class="error-message">
+    Hubo un error al registrar la cuenta. Por favor, intente nuevamente.
+  </div>
+  <form th:action="@{/register}" method="post">
+    <div class="form-group">
+      <label for="username">Nombre de usuario:</label>
+      <input type="text" id="username" name="username" required />
+    </div>
+    <div class="form-group">
+      <label for="email">Correo electrónico:</label>
+      <input type="email" id="email" name="email" required />
+    </div>
+    <div class="form-group">
+      <label for="password">Contraseña:</label>
+      <input type="password" id="password" name="password" required />
+    </div>
+    <div class="form-group">
+      <label for="first_name">Nombre:</label>
+      <input type="text" id="first_name" name="first_name" required />
+    </div>
+    <div class="form-group">
+      <label for="last_name">Apellido:</label>
+      <input type="text" id="last_name" name="last_name" required />
+    </div>
+    <div class="form-group">
+      <label for="role">Rol:</label>
+      <select id="role" name="role" required>
+        <option value="USER">Usuario</option>
+        <option value="PROVIDER">Proveedor</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <button type="submit">Registrar</button>
+    </div>
+  </form>
+
+  <div class="login-link">
+    <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a></p>
+  </div>
+</div>
+</body>
+</html>

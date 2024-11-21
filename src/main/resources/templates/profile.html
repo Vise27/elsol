@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+</head>
+
+<body>
+<div th:replace="~{home/links}"></div>
+
+<!-- Topbar Start -->
+<div th:replace="~{home/Topbar}"></div>
+
+
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-6 d-flex justify-content-center align-items-center">
+      <div class="user-icon" style="font-size: 150px; color: #007bff;">
+        <i class="fas fa-user-circle"></i>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <h1 class="mb-3" th:text="'Bienvenido, ' + ${user.firstName}"></h1>
+      <h4 class="text-muted mb-3" th:text="'Correo electrónico: ' + ${user.email}"></h4>
+      <p><strong>Nombre:</strong> <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span></p>
+      <p><strong>Usuario:</strong> <span th:text="${user.username}"></span></p>
+      <p><strong>Rol:</strong> <span th:text="${user.role}"></span></p>
+
+      <!-- Botones -->
+      <div class="mt-4">
+        <a href="/editProfile" class="btn btn-primary">Editar Perfil</a>
+        <a href="/logout" class="btn btn-danger ml-2">Cerrar sesión</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Footer Start -->
+<div th:replace="~{home/Footer}"></div>
+
+</body>
+
+</html>
