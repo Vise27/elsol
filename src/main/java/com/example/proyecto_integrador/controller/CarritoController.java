@@ -35,6 +35,7 @@ public class CarritoController {
     public String verCarrito(@SessionAttribute("user") UserDTO user, Model model) {
         Carrito carrito = carritoService.obtenerCarritoPorUsuario(user.getUsername());
 
+
         if (carrito != null) {
             List<CarritoItem> cartItems = carritoService.obtenerItemsDelCarrito(carrito.getId());
             double totalCarrito = carritoService.calcularTotalCarrito(carrito);
@@ -45,7 +46,7 @@ public class CarritoController {
             model.addAttribute("mensaje", "No se encontró un carrito asociado al usuario.");
         }
 
-        return "carrito"; // Vista carrito.html
+        return "carrito";
     }
 
     // Eliminar un producto del carrito
@@ -145,6 +146,6 @@ public class CarritoController {
             }
         }
 
-        return "redirect:/carrito";
+        return "redirect:/";
     }
 }

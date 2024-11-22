@@ -180,7 +180,7 @@
             <p class="text-muted small" th:text="'Stock: ' + ${producto.stock} + ' unidades disponibles'"></p>
 
             <!-- Formulario "Agregar al carrito" solo si el usuario está autenticado -->
-            <div th:if="${session.user != null}">
+            <div >
               <form th:action="@{/carrito/agregar}" method="post">
                 <input type="hidden" name="productoCodigo" th:value="${producto.codigo}"/>
 
