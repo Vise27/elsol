@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>Carrito de Compras</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+    <script src="https://www.paypal.com/sdk/js?client-id=AT4P1DTR0HxNN3A5CJSWwq3tbBd9Xka94I3L60UQ1yNBL6auxa-TdixveaP0A5MFvYVgfcSNVTuqJ8un"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -159,7 +160,33 @@
                         <button type="submit" class="btn-checkout">Proceder al Pago</button>
                     </form>
                 </div>
+
             </div>
+            <!-- prueba paypal xd -->
+
+            <div id="paypal-button-container"></div>
+            <script>
+                paypal.Buttons({
+                    createOrder: function(data,actions){
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount:{
+                                    value:100
+                                }
+                            }]
+                        });
+                    },
+                    onApprove:function(data, actions){
+                        actions.order.capture().then(function(detalles){
+                        });
+
+                    },
+                    onCancel:function(data){
+                        alert("Pago cancelado");
+                        console.log(data);
+                    }
+                }).render('#paypal-button-container');
+            </script>
 
             <div th:if="${cartItems == null or cartItems.size() == 0}">
                 <div class="alert alert-info text-center">
@@ -169,5 +196,5 @@
         </div>
     </div>
 </div>
-
+</body>
 </html>
