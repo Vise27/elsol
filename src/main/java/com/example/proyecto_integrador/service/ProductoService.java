@@ -34,17 +34,6 @@ public class ProductoService {
         return (Producto)this.productoRepository.findById(id).orElse((Producto) null);
     }
 
-    public Producto guardarProducto(Producto producto) {
-        return (Producto)this.productoRepository.save(producto);
-    }
-
-    public void eliminarProducto(Long id) {
-        this.productoRepository.deleteById(id);
-    }
-
-    public List<Categoria> obtenerCategorias() {
-        return this.categoriaRepository.findAll();
-    }
 
     public List<Producto> obtenerProductosDesdeApi() {
         try {
@@ -85,6 +74,21 @@ public class ProductoService {
     public boolean verificarStock(Long productoId, int cantidad) {
         Producto producto = this.obtenerProductoPorIdDesdeApi(productoId);
         return producto != null && producto.getStock() >= cantidad;
+    }
+    public List<Producto> buscarPorCategoria(Long categoriaId) {
+        try {
+            String url = API_URL + "?categoria=" + categoriaId; // Construir la URL
+            ResponseEntity<Producto[]> response = restTemplate.getForEntity(url, Producto[].class);
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return Arrays.asList(response.getBody());
+            } else {
+                System.out.println("Error: API respondió con un código no exitoso.");
+                return List.of();
+            }
+        } catch (RestClientException e) {
+            System.out.println("Error al consumir la API: " + e.getMessage());
+            return List.of();
+        }
     }
 
 }

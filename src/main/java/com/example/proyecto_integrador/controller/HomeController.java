@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping({"/"})
 public class HomeController {
-    @Autowired
-    private final CategoriaService categoriaService;
+
     @Autowired
     private final ProductoService productoService;
 
@@ -30,12 +29,6 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping({"home/categorias"})
-    public String listarCategorias(Model model) {
-        List<Categoria> categorias = this.categoriaService.listarCategorias();
-        model.addAttribute("categorias", categorias);
-        return "home/Categories";
-    }
 
     @GetMapping({"/admin"})
     public String admin() {
@@ -62,7 +55,6 @@ public class HomeController {
 
     @Generated
     public HomeController(final CategoriaService categoriaService, final ProductoService productoService) {
-        this.categoriaService = categoriaService;
         this.productoService = productoService;
     }
 }
