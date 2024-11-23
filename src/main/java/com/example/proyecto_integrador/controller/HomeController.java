@@ -40,7 +40,7 @@ public class HomeController {
         Producto producto = this.productoService.obtenerProductoPorIdDesdeApi(codigo);
         if (producto != null) {
             model.addAttribute("producto", producto);
-            return "detalle";
+            return "Productos/detalle";
         } else {
             return "error";
         }
@@ -50,7 +50,7 @@ public class HomeController {
     public String buscarProductos(@RequestParam("query") String query, Model model) {
         List<Producto> productos = this.productoService.buscarProductos(query);
         model.addAttribute("productos", productos);
-        return "resultadoProducto";
+        return "Productos/resultadoProducto";
     }
 
     @Generated

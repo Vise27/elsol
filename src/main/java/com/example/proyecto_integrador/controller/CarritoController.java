@@ -49,7 +49,7 @@ public class CarritoController {
             model.addAttribute("mensaje", "No se encontró un carrito asociado al usuario.");
         }
 
-        return "carrito";
+        return "Carrito/carrito";
     }
 
     // Eliminar un producto del carrito
@@ -127,11 +127,8 @@ public class CarritoController {
         return "redirect:/"; // Página de confirmación de pago exitosa
     }
 
-    // Método simulado para procesar el pago
     private boolean xd(double totalCarrito) {
-        // Aquí puedes integrar una pasarela de pagos real
-        // Por ejemplo, realizar una llamada a la API de un sistema de pagos.
-        // Si el pago es exitoso, retornar true.
+
         return true; // Simula un pago exitoso
     }
 

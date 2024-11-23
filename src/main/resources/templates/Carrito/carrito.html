@@ -1,113 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="utf-8">
     <title>Carrito de Compras</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
     <script src="https://www.paypal.com/sdk/js?client-id=AT4P1DTR0HxNN3A5CJSWwq3tbBd9Xka94I3L60UQ1yNBL6auxa-TdixveaP0A5MFvYVgfcSNVTuqJ8un"></script>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .cart-container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-
-        .cart-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #ddd;
-            padding: 15px 0;
-        }
-
-        .cart-item:last-child {
-            border-bottom: none;
-        }
-
-        .cart-item img {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-
-        .cart-item-details {
-            flex-grow: 1;
-            margin-left: 15px;
-        }
-
-        .cart-item-details h5 {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
-
-        .cart-item-details p {
-            margin: 0;
-            color: #6c757d;
-        }
-
-        .cart-summary {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-        }
-
-        .total-price {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .btn-back, .btn-checkout {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-back {
-            background-color: #007bff;
-        }
-
-        .btn-back:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-checkout {
-            background-color: #28a745;
-        }
-
-        .btn-checkout:hover {
-            background-color: #218838;
-        }
-
-        @media (max-width: 768px) {
-            .cart-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .cart-item img {
-                margin-bottom: 10px;
-            }
-
-            .cart-item-actions {
-                margin-top: 10px;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -139,8 +36,7 @@
                         <div class="cart-item-actions text-center">
                             <form th:action="@{/carrito/actualizarCantidad}" method="post">
                                 <input type="hidden" name="carritoItemId" th:value="${carritoItem.idItem}" />
-                                <input type="number" name="cantidad" th:value="${carritoItem.cantidad}"
-                                       min="1" th:max="${carritoItem.producto.stock}" class="form-control" style="width: 80px;" />
+                                <input type="number" name="cantidad" th:value="${carritoItem.cantidad}" min="1" th:max="${carritoItem.producto.stock}" class="form-control" style="width: 80px;" />
                                 <button type="submit" class="btn btn-outline-primary mt-2">Actualizar</button>
                             </form>
 
@@ -160,31 +56,26 @@
                         <button type="submit" class="btn-checkout">Proceder al Pago</button>
                     </form>
                 </div>
-
             </div>
-            <!-- prueba paypal xd -->
 
+            <!-- Prueba de Paypal -->
             <div id="paypal-button-container"></div>
             <script>
                 paypal.Buttons({
-                    createOrder: function(data,actions){
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount:{
-                                    value:100
-                                }
-                            }]
-                        });
-                    },
-                    onApprove:function(data, actions){
-                        actions.order.capture().then(function(detalles){
-                        });
-
-                    },
-                    onCancel:function(data){
-                        alert("Pago cancelado");
-                        console.log(data);
-                    }
+                  createOrder: function(data, actions) {
+                    return actions.order.create({
+                      purchase_units: [{
+                        amount: { value: 100 }
+                      }]
+                    });
+                  },
+                  onApprove: function(data, actions) {
+                    actions.order.capture().then(function(detalles) {});
+                  },
+                  onCancel: function(data) {
+                    alert("Pago cancelado");
+                    console.log(data);
+                  }
                 }).render('#paypal-button-container');
             </script>
 

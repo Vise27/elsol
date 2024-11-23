@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <title th:text="'Detalle de ' + ${producto.nombre}">Detalle del Producto</title>
+  <link href="/recursos_plantilla/css/style.css" rel="stylesheet"> <!-- Asegúrate de incluir el archivo de CSS -->
+</head>
+
+<body>
+<div th:replace="~{home/links}"></div>
+
+<!-- Topbar -->
+<div th:replace="~{home/Topbar}"></div>
+
+<!-- Detalle del Producto -->
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-6">
+      <!-- Imagen del Producto -->
+      <img th:src="${producto.imagen}" class="product-image" alt="Imagen del Producto">
+    </div>
+    <div class="col-lg-6">
+      <h1 class="mb-3" th:text="${producto.nombre}"></h1>
+      <h4 class="text-muted mb-3" th:text="'Precio: $' + ${producto.precio}"></h4>
+      <p th:text="'Stock disponible: ' + ${producto.stock}"></p>
+      <p>Categoria: <span th:text="${producto.categoria.tipo}"></span></p>
+
+      <!-- Formulario para Agregar al Carrito -->
+      <form onsubmit="agregarProducto(event, this)" method="post">
+        <input type="hidden" name="productoCodigo" th:value="${producto.codigo}" /> <!-- Código del Producto -->
+
+        <div class="quantity-input">
+          <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.nextElementSibling.stepDown()">-</button>
+          <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" class="form-control" required />
+          <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.previousElementSibling.stepUp()">+</button>
+        </div>
+
+        <button type="submit" class="btn btn-outline-dark btn-square mt-3">
+          <i class="fa fa-shopping-cart"></i> Agregar al carrito
+        </button>
+      </form>
+
+      <a href="/" class="btn btn-primary mt-3">Volver</a>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="~{home/Footer}"></div>
+
+<script>
+  function agregarProducto(event, form) {
+    event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
+
+    const formData = new FormData(form); // Extrae los datos del formulario
+
+    fetch('/carrito/agregar', {
+      method: 'POST',
+      body: new URLSearchParams(formData), // Convierte FormData en una consulta URL
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded', // Configura el encabezado
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Mostrar una notificación basada en la respuesta
+      alert(data.message);
+    })
+    .catch(error => {
+      console.error('Error al agregar producto:', error);
+      alert('Ocurrió un error al agregar el producto al carrito.');
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,158 +1,3 @@
-<style>
-  /* Ajustar la altura de los elementos del producto */
-  .product-item {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 380px;
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .product-item:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-  }
-
-  .image-container {
-    height: 250px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Garantiza que la imagen cubra completamente el contenedor sin distorsionarse */
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-  }
-
-  .product-img:hover .product-image {
-    transform: scale(1.05);
-  }
-
-  /* Eliminar el ícono del carrito al pasar sobre el producto */
-  .product-action {
-    display: none;
-  }
-
-  .text-center {
-    min-height: 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  /* Estilos para el título "Productos" */
-  .section-title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 40px;
-  }
-
-  .section-title span {
-    background-color: #f8f9fa;
-    padding: 10px 30px;
-    border-radius: 5px;
-    font-size: 24px;
-    font-weight: bold;
-  }
-
-  /* Mejorar la apariencia del botón "Agregar al carrito" */
-  .btn-outline-dark {
-    border-radius: 30px;
-    padding: 10px 20px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    width: 100%; /* Hacer que el botón ocupe todo el ancho */
-    font-weight: bold;
-  }
-
-  .btn-outline-dark:hover {
-    background-color: #333;
-    color: white;
-  }
-
-  /* Botón "Ver Detalles" */
-  .btn-primary {
-    border-radius: 30px;
-    padding: 10px 20px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    width: 100%;
-    font-weight: bold;
-  }
-
-  .btn-primary:hover {
-    background-color: #007bff;
-    transform: translateY(-2px);
-  }
-
-  /* Estilos para el selector de cantidad */
-  .quantity-input {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 160px;
-    margin-top: 10px;
-  }
-
-  .quantity-input input {
-    width: 60px;
-    height: 35px;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 30px;
-    font-size: 16px;
-    padding: 5px;
-    margin: 0 5px;
-    transition: border-color 0.3s ease;
-  }
-
-  .quantity-input input:focus {
-    outline: none;
-    border-color: #007bff;
-  }
-
-  .quantity-input button {
-    width: 30px;
-    height: 30px;
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-  }
-
-  .quantity-input button:hover {
-    background-color: #007bff;
-    color: white;
-  }
-
-  .quantity-input button:disabled {
-    background-color: #e9ecef;
-    color: #ccc;
-  }
-
-  /* Estilos para alinear el botón de agregar al carrito y el selector de cantidad */
-  .add-to-cart-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .add-to-cart-container button {
-    flex-grow: 1;
-  }
-</style>
 
 <div class="container-fluid pt-5 pb-3">
   <!-- Título centrado -->
@@ -164,47 +9,44 @@
     <th:block th:each="producto : ${productos}">
       <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
         <div class="product-item bg-light mb-4">
-          <!-- Contenedor de la imagen del producto -->
-          <div class="product-img position-relative overflow-hidden">
-            <div class="image-container">
-              <!-- Usar directamente la URL completa de la imagen desde la API -->
-              <img class="product-image" th:src="${producto.imagen}" alt="Imagen de [[${producto.nombre}]]">
-            </div>
-          </div>
-
-          <div class="text-center py-4">
-            <h5 th:text=" ${producto.nombre}"></h5>
-            <div class="d-flex align-items-center justify-content-center mt-2">
-              <h5 th:text="'S/' + ${producto.precio}"></h5>
-            </div>
-            <p class="text-muted small" th:text="'Stock: ' + ${producto.stock} + ' unidades disponibles'"></p>
-
-            <form onsubmit="agregarProducto(event, this)" method="post">
-              <input type="hidden" name="productoCodigo" th:value="${producto.codigo}" />
-
-              <div class="add-to-cart-container">
-                <div class="quantity-input">
-                  <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.nextElementSibling.stepDown()">-</button>
-                  <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" class="form-control" required />
-                  <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.previousElementSibling.stepUp()">+</button>
-                </div>
-                <button type="submit" class="btn btn-outline-dark btn-square mt-3">
-                  <i class="fa fa-shopping-cart"></i> Agregar al carrito
-                </button>
+          <!-- Contenedor del producto ahora como un enlace -->
+          <a th:href="@{/home/producto/detalle/{codigo}(codigo=${producto.codigo})}">
+            <div class="product-img position-relative overflow-hidden">
+              <div class="image-container">
+                <img class="product-image" th:src="${producto.imagen}" alt="Imagen de [[${producto.nombre}]]">
               </div>
-            </form>
+            </div>
 
-          </div>
-          <!-- Botón para ver detalles del producto -->
-          <a class="btn btn-primary mt-2" th:href="@{/home/producto/detalle/{codigo}(codigo=${producto.codigo})}">
-            Ver Detalles
+            <div class="text-center py-4">
+              <h5 th:text="${producto.nombre}"></h5>
+              <div class="d-flex align-items-center justify-content-center mt-2">
+                <h5 th:text="'S/' + ${producto.precio}"></h5>
+              </div>
+              <p class="text-muted small" th:text="'Stock: ' + ${producto.stock} + ' unidades disponibles'"></p>
+            </div>
           </a>
+
+          <!-- Formulario para agregar al carrito -->
+          <form onsubmit="agregarProducto(event, this)" method="post">
+            <input type="hidden" name="productoCodigo" th:value="${producto.codigo}" />
+
+            <div class="add-to-cart-container">
+              <div class="quantity-input">
+                <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.nextElementSibling.stepDown()">-</button>
+                <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" class="form-control" required />
+                <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.previousElementSibling.stepUp()">+</button>
+              </div>
+              <button type="submit" class="btn btn-outline-dark btn-square mt-3">
+                <i class="fa fa-shopping-cart"></i> Agregar al carrito
+              </button>
+            </div>
+          </form>
         </div>
       </div>
+    </th:block>
   </div>
-  </th:block>
 </div>
-</div>
+
 <script>
   function agregarProducto(event, form) {
     event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
@@ -218,19 +60,17 @@
         'Content-Type': 'application/x-www-form-urlencoded', // Configura el encabezado
       },
     })
-      .then(response => response.json())
-      .then(data => {
-        // Mostrar una notificación basada en la respuesta
-        if (data.success) {
-          alert(data.message); // Notificación de éxito
-        } else {
-          alert(data.message); // Notificación de error
-        }
-      })
-      .catch(error => {
-        console.error('Error al agregar producto:', error);
-        alert('Ocurrió un error al agregar el producto al carrito.');
-      });
+    .then(response => response.json())
+    .then(data => {
+      // Mostrar una notificación basada en la respuesta
+      alert(data.message);
+    })
+    .catch(error => {
+      console.error('Error al agregar producto:', error);
+      alert('Ocurrió un error al agregar el producto al carrito.');
+    });
   }
 </script>
+</body>
 
+</html>

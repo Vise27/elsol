@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
-
 @Service
 public class AuthService {
 
@@ -19,7 +18,6 @@ public class AuthService {
 
     @Autowired
     private TokenManager tokenManager;
-
 
     private final String API_URL = "https://api-zsm7.onrender.com";  // URL base de la API de Django
 
@@ -92,71 +90,29 @@ public class AuthService {
         return null;
     }
 
-    // Método para actualizar los datos del usuario
-    public UserDTO updateUser(UserDTO user, String token) {
-        String updateUrl = API_URL + "/api/user/update/";  // Endpoint de actualización en Django
+    // Método para obtener los datos del perfil del usuario
+    public UserDTO getUserProfile(String token) {
+        String profileUrl = API_URL + "/api/user/profile/";  // Endpoint para obtener el perfil en Django
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<UserDTO> entity = new HttpEntity<>(user, headers);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<UserDTO> response = restTemplate.exchange(updateUrl, HttpMethod.PUT, entity, UserDTO.class);
+            ResponseEntity<UserDTO> response = restTemplate.exchange(profileUrl, HttpMethod.GET, entity, UserDTO.class);
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 return response.getBody();
             } else {
-                System.out.println("Error al actualizar el usuario: " + response.getStatusCode());
+                System.out.println("Error al obtener el perfil del usuario: " + response.getStatusCode());
             }
         } catch (HttpClientErrorException e) {
-            System.out.println("Error al actualizar el usuario: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
+            System.out.println("Error al obtener el perfil del usuario: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
         } catch (Exception e) {
             System.out.println("Error inesperado: " + e.getMessage());
         }
 
         return null;
     }
-
-    // Método para obtener los datos del perfil del usuario
-    public UserDTO getUserProfile(String token) {
-        String profileUrl = API_URL + "/api/user/profile/";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        try {
-            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                    profileUrl,
-                    HttpMethod.GET,
-                    entity,
-                    new org.springframework.core.ParameterizedTypeReference<>() {}
-            );
-
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                Map<String, Object> body = response.getBody();
-
-                // Crear un UserDTO manualmente a partir de los datos recibidos
-                UserDTO user = new UserDTO();
-                user.setUsername((String) body.get("username"));
-                user.setEmail((String) body.get("email"));
-                user.setFirstName((String) body.get("first_name"));
-                user.setLastName((String) body.get("last_name"));
-                user.setRole((String) body.get("role"));
-
-                return user;
-            } else {
-                System.out.println("Error al obtener el perfil del usuario: " + response.getStatusCode());
-            }
-        } catch (HttpClientErrorException e) {
-            System.out.println("Error de autenticación al obtener el perfil: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error inesperado al obtener el perfil: " + e.getMessage());
-        }
-
-        return null;
-    }
-
 }
