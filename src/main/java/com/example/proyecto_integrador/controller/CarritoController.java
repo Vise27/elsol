@@ -7,11 +7,14 @@ import com.example.proyecto_integrador.service.CarritoService;
 import com.example.proyecto_integrador.service.ProductoService;
 import com.example.proyecto_integrador.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -125,7 +128,7 @@ public class CarritoController {
     }
 
     // Método simulado para procesar el pago
-    private boolean procesarPago(double totalCarrito) {
+    private boolean xd(double totalCarrito) {
         // Aquí puedes integrar una pasarela de pagos real
         // Por ejemplo, realizar una llamada a la API de un sistema de pagos.
         // Si el pago es exitoso, retornar true.
@@ -133,19 +136,32 @@ public class CarritoController {
     }
 
     @PostMapping("/agregar")
-    public String agregarProductoAlCarrito(@RequestParam("productoCodigo") Long productoCodigo,
-                                           @RequestParam("cantidad") int cantidad,
-                                           @SessionAttribute("user") UserDTO user) {
+    public ResponseEntity<?> agregarProductoAlCarrito(
+            @RequestParam("productoCodigo") Long productoCodigo,
+            @RequestParam("cantidad") int cantidad,
+            @SessionAttribute("user") UserDTO user) {
+
         Producto producto = productoService.obtenerProductoPorId(productoCodigo);
 
-        if (producto != null && cantidad > 0 && producto.getStock() >= cantidad) {
-            Carrito carrito = carritoService.obtenerCarritoPorUsuario(user.getUsername());
-
-            if (carrito != null) {
-                carritoService.agregarProductoAlCarrito(carrito, producto, cantidad);
-            }
+        if (producto == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("success", false, "message", "El producto no existe."));
         }
 
-        return "redirect:/";
+        if (cantidad <= 0 || producto.getStock() < cantidad) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("success", false, "message", "Cantidad inválida o no hay suficiente stock."));
+        }
+
+        Carrito carrito = carritoService.obtenerCarritoPorUsuario(user.getUsername());
+
+        if (carrito == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "No se pudo obtener el carrito del usuario."));
+        }
+
+        carritoService.agregarProductoAlCarrito(carrito, producto, cantidad);
+
+        return ResponseEntity.ok(Map.of("success", true, "message", "Producto agregado al carrito exitosamente."));
     }
 }

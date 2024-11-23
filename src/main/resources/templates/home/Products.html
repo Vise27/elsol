@@ -173,37 +173,64 @@
           </div>
 
           <div class="text-center py-4">
-            <a class="h6 text-decoration-none text-truncate" th:text="${producto.nombre}"></a>
+            <h5 th:text=" ${producto.nombre}"></h5>
             <div class="d-flex align-items-center justify-content-center mt-2">
-              <h5 th:text="'S/' + ${producto.precio}">Precio</h5>
+              <h5 th:text="'S/' + ${producto.precio}"></h5>
             </div>
             <p class="text-muted small" th:text="'Stock: ' + ${producto.stock} + ' unidades disponibles'"></p>
 
-            <!-- Formulario "Agregar al carrito" solo si el usuario está autenticado -->
-            <div >
-              <form th:action="@{/carrito/agregar}" method="post">
-                <input type="hidden" name="productoCodigo" th:value="${producto.codigo}"/>
+            <form onsubmit="agregarProducto(event, this)" method="post">
+              <input type="hidden" name="productoCodigo" th:value="${producto.codigo}" />
 
-                <!-- Contenedor con la cantidad y el botón "Agregar al carrito" -->
-                <div class="add-to-cart-container">
-                  <div class="quantity-input">
-                    <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.nextElementSibling.stepDown()">-</button>
-                    <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" class="form-control" required />
-                    <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.previousElementSibling.stepUp()">+</button>
-                  </div>
-                  <button type="submit" class="btn btn-outline-dark btn-square mt-3">
-                    <i class="fa fa-shopping-cart"></i> Agregar al carrito
-                  </button>
+              <div class="add-to-cart-container">
+                <div class="quantity-input">
+                  <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.nextElementSibling.stepDown()">-</button>
+                  <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" class="form-control" required />
+                  <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.previousElementSibling.stepUp()">+</button>
                 </div>
-              </form>
-            </div>
-            <!-- Botón para ver detalles del producto -->
-            <a class="btn btn-primary mt-2" th:href="@{/home/producto/detalle/{codigo}(codigo=${producto.codigo})}">
-              Ver Detalles
-            </a>
+                <button type="submit" class="btn btn-outline-dark btn-square mt-3">
+                  <i class="fa fa-shopping-cart"></i> Agregar al carrito
+                </button>
+              </div>
+            </form>
+
           </div>
+          <!-- Botón para ver detalles del producto -->
+          <a class="btn btn-primary mt-2" th:href="@{/home/producto/detalle/{codigo}(codigo=${producto.codigo})}">
+            Ver Detalles
+          </a>
         </div>
       </div>
-    </th:block>
   </div>
+  </th:block>
 </div>
+</div>
+<script>
+  function agregarProducto(event, form) {
+    event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
+
+    const formData = new FormData(form); // Extrae los datos del formulario
+
+    fetch('/carrito/agregar', {
+      method: 'POST',
+      body: new URLSearchParams(formData), // Convierte FormData en una consulta URL
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded', // Configura el encabezado
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Mostrar una notificación basada en la respuesta
+        if (data.success) {
+          alert(data.message); // Notificación de éxito
+        } else {
+          alert(data.message); // Notificación de error
+        }
+      })
+      .catch(error => {
+        console.error('Error al agregar producto:', error);
+        alert('Ocurrió un error al agregar el producto al carrito.');
+      });
+  }
+</script>
+
