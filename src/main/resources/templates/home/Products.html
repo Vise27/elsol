@@ -1,9 +1,6 @@
 
 <div class="container-fluid pt-5 pb-3">
   <!-- Título centrado -->
-  <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
-    <span class="bg-secondary pr-3 pl-3">Productos</span>
-  </h2>
 
   <div class="row justify-content-center px-xl-5">
     <th:block th:each="producto : ${productos}">
@@ -23,6 +20,8 @@
                 <!--<p class="text-muted small mb-0" th:text="'Stock: ' + ${producto.stock} + ' unidades disponibles'"></p>-->
               </div>
             </div>
+
+
 
           </a>
 
@@ -71,6 +70,4 @@
     });
   }
 </script>
-</body>
 
-</html>

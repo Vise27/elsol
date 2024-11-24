@@ -1,120 +1,22 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
-<head>
-  <meta charset="utf-8">
-  <title>MultiShop - Online Shop Website Template</title>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <meta content="Free HTML Templates" name="keywords">
-  <meta content="Free HTML Templates" name="description">
-
-  <!-- Favicon -->
-  <link href="/recursos_plantilla/img/favicon.ico" rel="icon">
-
-  <!-- Google Web Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-
-
-  <!-- Customized Bootstrap Stylesheet -->
-  <link href="/recursos_plantilla/css/style.css" rel="stylesheet">
-
-  <style>
-    /* Ajustar la altura de los elementos del producto */
-  .product-item {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-  }
-
-  /* Asegurar que todas las imágenes tengan el mismo tamaño */
-  .image-container {
-    height: 200px; /* Ajusta esta altura según tus necesidades */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .product-image {
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: cover;
-  }
-
-  /* Estilos para la sección de acciones */
-  .product-action {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .product-img:hover .product-action {
-    opacity: 1;
-  }
-
-  .text-center {
-    min-height: 80px; /* Asegura que haya espacio suficiente para el texto */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-
-  </style>
-</head>
-
-<body>
-<!-- Topbar Start -->
-<div th:replace="~{home/Topbar}"></div>
-
-<!-- Carousel Start -->
-<div th:replace="~{home/Carousel}"></div>
-
-<!-- Mostrar Categorias xd -->
+<!-- Categorías como menú desplegable -->
 <div class="container-fluid pt-5 pb-3">
   <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
     <span class="bg-secondary pr-3">Categorías</span>
   </h2>
   <div class="row px-xl-5">
-    <th:block th:each="categoria : ${categorias}">
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <div class="category-item text-center bg-light mb-4 p-4">
-          <a class="h6 text-decoration-none text-truncate" th:href="@{/categoria/{id}(id=${categoria.codigo})}" th:text="${categoria.tipo}">Nombre de la Categoría</a>
+    <div class="col-lg-12">
+      <!-- Botón desplegable -->
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownCategorias" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Seleccionar Categoría
+        </button>
+        <!-- Lista desplegable -->
+        <div class="dropdown-menu" aria-labelledby="dropdownCategorias">
+          <th:block th:each="categoria : ${categorias}">
+            <a class="dropdown-item" th:text="${categoria.tipo}"></a>
+          </th:block>
         </div>
       </div>
-    </th:block>
+    </div>
   </div>
 </div>
-
-<!-- Footer Start -->
-<div th:replace="~{home/Footer}"></div>
-
-<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
-<!-- JavaScript Libraries -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-<script src="lib/easing/easing.min.js"></script>
-<script src="lib/owlcarousel/owl.carousel.min.js"></script>
-
-<!-- Contact Javascript File -->
-<script src="mail/jqBootstrapValidation.min.js"></script>
-<script src="mail/contact.js"></script>
-
-<!-- Template Javascript -->
-<script src="js/main.js"></script>
-</body>
-
-</html>

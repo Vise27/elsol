@@ -10,10 +10,7 @@ import lombok.Generated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping({"/"})
@@ -21,11 +18,19 @@ public class HomeController {
 
     @Autowired
     private final ProductoService productoService;
+    @Autowired
+    private final CategoriaService categoriaService;
 
+    @ModelAttribute("categorias")
+    public List<Categoria> obtenerCategorias() {
+        return categoriaService.listarCategorias();
+    }
     @GetMapping({"/"})
-    public String listarProductos(Model model) {
+    public String listarProductos(@RequestParam(defaultValue = "0") int page,Model model) {
+
         List<Producto> productos = this.productoService.obtenerProductosDesdeApi();
         model.addAttribute("productos", productos);
+
         return "index";
     }
 
@@ -54,7 +59,8 @@ public class HomeController {
     }
 
     @Generated
-    public HomeController(final CategoriaService categoriaService, final ProductoService productoService) {
+    public HomeController(final CategoriaService categoriaService, final ProductoService productoService, CategoriaService categoriaService1) {
         this.productoService = productoService;
+        this.categoriaService = categoriaService1;
     }
 }

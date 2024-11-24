@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
@@ -25,6 +26,8 @@ public class CategoriaController {
         this.productoService = productoService;
     }
 
+
+
     @GetMapping({"home/categorias"})
     public String listarCategorias(Model model) {
         List<Categoria> categorias = this.categoriaService.listarCategorias();
@@ -37,8 +40,14 @@ public class CategoriaController {
     public String listarProductosPorCategoria(@PathVariable Long id, Model model) {
         List<Producto> productos = productoService.buscarPorCategoria(id);
         model.addAttribute("productos", productos);
+
+        List<Categoria> categorias = categoriaService.listarCategorias();
+        model.addAttribute("categorias", categorias);
+
         model.addAttribute("categoriaId", id);
-        return "index";
+
+        return "index"; // Renderizar la misma plantilla
     }
+
 
 }

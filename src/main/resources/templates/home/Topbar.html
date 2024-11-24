@@ -2,7 +2,7 @@
   <!-- Logo y Búsqueda -->
   <div class="row align-items-center bg-light py-3 px-3 px-md-5">
     <div class="col-6 col-md-4">
-      <a href="" class="text-decoration-none">
+      <a href="/" class="text-decoration-none">
         <span class="h4 text-uppercase text-primary bg-dark px-2">Comercial</span>
         <span class="h4 text-uppercase text-dark bg-primary px-2 ml-n1">EL SOL</span>
       </a>
@@ -24,9 +24,6 @@
 
     <!-- Íconos de favoritos, carrito y usuario en pantallas grandes -->
     <div class="col-md-1 d-none d-md-flex justify-content-end">
-      <a href="" class="btn px-0 mr-2">
-        <i class="fas fa-heart" style="color: #ffc107;"></i>
-      </a>
       <a href="/carrito" class="btn px-0 mr-2">
         <i class="fas fa-shopping-cart" style="color: #ffc107;"></i>
       </a>
@@ -50,51 +47,47 @@
     <!-- Ícono de menú en pantallas pequeñas -->
     <div class="col-12 d-md-none text-right">
       <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="fas fa-bars"></i> <!-- Ícono de hamburguesa -->
+        <i class="fas fa-bars"></i>
       </button>
     </div>
   </div>
 
-  <!-- Menú de navegación y íconos en pantallas pequeñas -->
+  <!-- Menú de navegación y categorías -->
   <div class="row bg-light py-2 px-3 px-md-5">
+    <!-- Menú en pantallas pequeñas -->
     <div class="col-12 collapse" id="navbarNav">
       <div class="bg-light py-2 px-3">
-        <!-- Menú de navegación -->
         <a class="text-body mx-3 d-block" href="/">Inicio</a>
-        <a class="text-body mx-3 d-block" href="/home/categorias">Categorías</a>
-        <a class="text-body mx-3 d-block" href="#">Contact</a>
-
-        <!-- Íconos de favoritos, carrito y usuario en el menú desplegable -->
-        <div class="d-flex justify-content-start mt-3">
-          <a href="" class="btn px-0 mr-2">
-            <i class="fas fa-heart" style="color: #ffc107;"></i>
-          </a>
-          <a href="/carrito" class="btn px-0 mr-2">
-            <i class="fas fa-shopping-cart" style="color: #ffc107;"></i>
-          </a>
-          <div class="btn-group">
-            <button type="button" class="btn px-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-user" style="color: #ffc107;"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-              <div th:if="${session.user == null}">
-                <a class="dropdown-item" href="/login">Iniciar sesión</a>
-                <a class="dropdown-item" href="/register">Registrar</a>
-              </div>
-              <div th:if="${session.user != null}">
-                <a class="dropdown-item" href="/profile">Perfil</a>
-                <a class="dropdown-item" href="/logout">Cerrar sesión</a>
-              </div>
-            </div>
+        <!-- Menú desplegable de Categorías -->
+        <div class="dropdown">
+          <button class="btn btn-light dropdown-toggle d-block mx-3" type="button" id="dropdownCategorias" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Categorías
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownCategorias">
+            <th:block th:each="categoria : ${categorias}">
+              <a class="dropdown-item" th:href="@{/categoria/{id}(id=${categoria.codigo})}" th:text="${categoria.tipo}"></a>
+            </th:block>
           </div>
         </div>
       </div>
     </div>
-    <!-- Menú de navegación en pantallas grandes -->
+
+    <!-- Menú en pantallas grandes -->
     <div class="col-12 d-none d-md-block">
       <div class="d-inline-flex align-items-center justify-content-center">
         <a class="text-body mx-3" href="/">Inicio</a>
-        <a class="text-body mx-3" href="/home/categorias">Categorías</a>
+        <!-- Menú desplegable de Categorías -->
+        <div class="dropdown">
+          <button class="btn btn-light dropdown-toggle" type="button" id="dropdownCategorias" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Categorías
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownCategorias">
+            <th:block th:each="categoria : ${categorias}">
+              <a class="dropdown-item" th:href="@{/categoria/{id}(id=${categoria.codigo})}" th:text="${categoria.tipo}"></a>
+            </th:block>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
