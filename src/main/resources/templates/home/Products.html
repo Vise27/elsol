@@ -16,14 +16,15 @@
                 <img class="product-image" th:src="${producto.imagen}" alt="Imagen de [[${producto.nombre}]]">
               </div>
             </div>
-
-            <div class="text-center py-4">
-              <h5 th:text="${producto.nombre}"></h5>
-              <div class="d-flex align-items-center justify-content-center mt-2">
-                <h5 th:text="'S/' + ${producto.precio}"></h5>
+            <div class="text-start py-4 ps-4">
+              <h5 th:text="${producto.nombre}" class="fw-bold fs-5 mb-1"></h5>
+              <div class="d-flex align-items-center justify-content-start">
+                <h5 th:text="'S/' + ${producto.precio}" class="mb-0 me-4 text-danger"></h5>
+                <!--<p class="text-muted small mb-0" th:text="'Stock: ' + ${producto.stock} + ' unidades disponibles'"></p>-->
               </div>
-              <p class="text-muted small" th:text="'Stock: ' + ${producto.stock} + ' unidades disponibles'"></p>
             </div>
+
+
           </a>
 
           <!-- Formulario para agregar al carrito -->

@@ -1,4 +1,15 @@
 /* Estilos generales */
+.nombre {
+  font-size: 1.5rem; /* Más grande que el estilo global */
+  font-weight: bold;
+}
+
+.precio {
+  color: #ff5733;
+  font-size: 1.25rem; /* Ajusta según tu preferencia */
+  font-weight: bold;
+}
+
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f8f9fa;
@@ -55,11 +66,7 @@ h2 {
   margin-bottom: 5px;
 }
 
-h5 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #007bff;
-}
+
 
 /* Botones */
 .btn-outline-dark, .btn-primary {

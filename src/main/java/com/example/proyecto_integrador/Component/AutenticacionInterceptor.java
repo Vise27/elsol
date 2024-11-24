@@ -14,7 +14,7 @@ public class AutenticacionInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // Lista de rutas públicas que no requieren autenticación
-        List<String> rutasPublicas = Arrays.asList("/login", "/register", "/home/**","/","/recursos_plantilla/**","/styles/**");
+        List<String> rutasPublicas = Arrays.asList("/login", "/register", "/home/**","/","/recursos_plantilla/**","/styles/**","/categoria/**");
 
         String token = (String) request.getSession().getAttribute("token");
 
