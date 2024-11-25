@@ -40,17 +40,24 @@ public class HomeController {
         return "Admin";
     }
 
-    @GetMapping({"home/producto/detalle/{codigo}"})
+    @GetMapping("home/producto/detalle/{codigo}")
     public String detalleProducto(@PathVariable("codigo") String codigo, Model model) {
-        Producto producto = productoService.obtenerProductoPorIdDesdeApi(codigo);
+        try {
+            Producto producto = productoService.obtenerProductoPorIdDesdeApi(codigo);
 
-        if (producto != null) {
-            model.addAttribute("producto", producto);
-            return "Productos/detalle";
-        } else {
+            if (producto != null) {
+                model.addAttribute("producto", producto);
+                return "Productos/detalle";
+            } else {
+                model.addAttribute("error", "Producto no encontrado.");
+                return "error";
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "Ocurrió un error al obtener el producto: " + e.getMessage());
             return "error";
         }
     }
+
 
     @GetMapping({"/home/buscarProductos"})
     public String buscarProductos(@RequestParam("query") String query, Model model) {

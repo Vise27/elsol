@@ -26,6 +26,13 @@
       <p th:text="'Stock disponible: ' + ${producto.stock}"></p>
       <p>Categoria: <span th:text="${producto.categoria.tipo}"></span></p>
 
+      <!-- Detalles del Proveedor -->
+      <div class="mt-4">
+        <h5>Proveedor:</h5>
+        <p><strong>Nombre:</strong> <span th:text="${producto.proveedor.nombre}"></span></p>
+
+      </div>
+
       <!-- Formulario para Agregar al Carrito -->
       <form onsubmit="agregarProducto(event, this)" method="post">
         <input type="hidden" name="productoCodigo" th:value="${producto.codigo}" /> <!-- Código del Producto -->

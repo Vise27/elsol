@@ -51,18 +51,20 @@ public class ProductoService {
     // Aquí cambiamos el parámetro a String, ya que ahora estamos usando 'codigo' como String
     public Producto obtenerProductoPorIdDesdeApi(String codigo) {
         try {
-            // Cambié la URL para buscar por el 'codigo' directamente en la API
             String url = API_URL + "?codigo=" + codigo;
-            ResponseEntity<Producto> response = this.restTemplate.getForEntity(url, Producto.class);
+            ResponseEntity<Producto[]> response = restTemplate.getForEntity(url, Producto[].class);
 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                return response.getBody();
+                Producto[] productos = response.getBody();
+                if (productos.length > 0) {
+                    return productos[0]; // Devuelve el primer producto
+                }
             }
         } catch (RestClientException e) {
-            System.out.println("Error al consumir la API externa para obtener producto por código: " + e.getMessage());
+            System.out.println("Error al consumir la API externa: " + e.getMessage());
         }
 
-        return null; // Si no se encuentra el producto en la API
+        return null; // Devuelve null si no se encontró el producto
     }
 
     public List<Producto> buscarProductos(String query) {
