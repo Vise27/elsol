@@ -124,10 +124,7 @@ public class CarritoController {
         // Guardar la venta y sus detalles
         ventaService.crearVenta(venta, detallesVenta);
 
-        // Vaciar el carrito después de registrar la venta
-        carritoService.vaciarCarrito(carrito);
 
-        // Redirigir al controlador de factura para continuar con el proceso
         return "redirect:/factura/generarFactura";
     }
 

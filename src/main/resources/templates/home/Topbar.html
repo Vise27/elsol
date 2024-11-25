@@ -12,7 +12,7 @@
     <div class="col-6 col-md-7 d-flex justify-content-between align-items-center">
       <form class="d-flex w-100" action="/home/buscarProductos" method="get">
         <div class="input-group w-100">
-          <input type="text" class="form-control" name="query" placeholder="Search for products">
+          <input type="text" class="form-control" name="query" placeholder="Buscar productos">
           <div class="input-group-append">
             <button class="btn btn-outline-primary" type="submit">
               <i class="fa fa-search"></i>
@@ -22,8 +22,11 @@
       </form>
     </div>
 
-    <!-- Íconos de favoritos, carrito y usuario en pantallas grandes -->
+    <!-- Íconos en pantallas grandes -->
     <div class="col-md-1 d-none d-md-flex justify-content-end">
+      <!--<a href="/favoritos" class="btn px-0 mr-2">
+        <i class="fas fa-heart" style="color: #ffc107;"></i>
+      </a>-->
       <a href="/carrito" class="btn px-0 mr-2">
         <i class="fas fa-shopping-cart" style="color: #ffc107;"></i>
       </a>
@@ -38,14 +41,37 @@
           </div>
           <div th:if="${session.user != null}">
             <a class="dropdown-item" href="/profile">Perfil</a>
+            <a class="dropdown-item" href="/historial">Historial de compras</a>
             <a class="dropdown-item" href="/logout">Cerrar sesión</a>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Ícono de menú en pantallas pequeñas -->
+    <!-- Íconos en pantallas pequeñas -->
     <div class="col-12 d-md-none text-right">
+
+      <div class="btn-group">
+        <button type="button" class="btn px-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-user" style="color: #ffc107;"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+          <div th:if="${session.user == null}">
+            <a class="dropdown-item" href="/login">Iniciar sesión</a>
+            <a class="dropdown-item" href="/register">Registrar</a>
+          </div>
+          <div th:if="${session.user != null}">
+            <a class="dropdown-item" href="/profile">Perfil</a>
+            <a class="dropdown-item" href="/historial">Historial de compras</a>
+            <a class="dropdown-item" href="/logout">Cerrar sesión</a>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-outline-primary mr-2" type="button">
+        <a href="/carrito" class="text-decoration-none">
+          <i class="fas fa-shopping-cart" style="color: #ffc107;"></i>
+        </a>
+      </button>
       <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <i class="fas fa-bars"></i>
       </button>
@@ -58,7 +84,6 @@
     <div class="col-12 collapse" id="navbarNav">
       <div class="bg-light py-2 px-3">
         <a class="text-body mx-3 d-block" href="/">Inicio</a>
-        <!-- Menú desplegable de Categorías -->
         <div class="dropdown">
           <button class="btn btn-light dropdown-toggle d-block mx-3" type="button" id="dropdownCategorias" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Categorías
@@ -76,7 +101,6 @@
     <div class="col-12 d-none d-md-block">
       <div class="d-inline-flex align-items-center justify-content-center">
         <a class="text-body mx-3" href="/">Inicio</a>
-        <!-- Menú desplegable de Categorías -->
         <div class="dropdown">
           <button class="btn btn-light dropdown-toggle" type="button" id="dropdownCategorias" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Categorías
@@ -87,7 +111,6 @@
             </th:block>
           </div>
         </div>
-
       </div>
     </div>
   </div>

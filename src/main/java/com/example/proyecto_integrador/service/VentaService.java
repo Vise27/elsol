@@ -17,7 +17,6 @@ public class VentaService {
     @Autowired
     private DetalleVentaService detalleVentaService;
 
-    // Crear una venta y los detalles de la venta
     public Venta crearVenta(Venta venta, List<DetalleVenta> detalles) {
         Venta ventaGuardada = ventaRepository.save(venta);  // Guarda la venta
         for (DetalleVenta detalle : detalles) {
@@ -26,4 +25,9 @@ public class VentaService {
         }
         return ventaGuardada;
     }
+
+    public List<Venta> obtenerHistorialPorUsuario(String username) {
+        return ventaRepository.findByUsuario_Username(username);
+    }
+
 }

@@ -30,4 +30,7 @@ public class Venta {
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)  // Asegurar que el usuario no sea nulo
     private User usuario;
+    @JoinColumn(name = "estado")
+    @Column(nullable = false, length = 20)
+    private String estado = "pendiente";
 }

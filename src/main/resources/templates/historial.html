@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Historial de Compras</title>
+</head>
+<body>
+<h1>Historial de Compras</h1>
+
+<!-- Mostrar mensaje si no hay compras -->
+<p th:if="${mensaje}" th:text="${mensaje}"></p>
+
+<!-- Tabla para mostrar las compras -->
+<table th:if="${historial}" border="1">
+  <thead>
+  <tr>
+    <th>Código de Venta</th>
+    <th>Fecha</th>
+    <th>Total</th>
+    <th>Estado</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="venta : ${historial}">
+    <td th:text="${venta.codigo}"></td>
+    <td th:text="${venta.fecha != null ? venta.fecha.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm')) : 'Sin fecha'}"></td>
+    <td th:text="${venta.total}"></td>
+    <td th:text="${venta.estado}"></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
