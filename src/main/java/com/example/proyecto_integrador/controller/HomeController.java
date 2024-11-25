@@ -41,8 +41,9 @@ public class HomeController {
     }
 
     @GetMapping({"home/producto/detalle/{codigo}"})
-    public String detalleProducto(@PathVariable("codigo") Long codigo, Model model) {
-        Producto producto = this.productoService.obtenerProductoPorIdDesdeApi(codigo);
+    public String detalleProducto(@PathVariable("codigo") String codigo, Model model) {
+        Producto producto = productoService.obtenerProductoPorIdDesdeApi(codigo);
+
         if (producto != null) {
             model.addAttribute("producto", producto);
             return "Productos/detalle";

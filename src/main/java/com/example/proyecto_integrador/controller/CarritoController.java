@@ -4,6 +4,7 @@ import com.example.proyecto_integrador.dto.UserDTO;
 import com.example.proyecto_integrador.model.*;
 import com.example.proyecto_integrador.repository.UserRepository;
 import com.example.proyecto_integrador.service.CarritoService;
+import com.example.proyecto_integrador.service.FacturaService;
 import com.example.proyecto_integrador.service.ProductoService;
 import com.example.proyecto_integrador.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class CarritoController {
 
     @Autowired
     private VentaService ventaService;
+    @Autowired
+    private FacturaService facturaService;
 
     // Ver el carrito de compras
     @GetMapping
@@ -65,7 +68,6 @@ public class CarritoController {
         return "redirect:/carrito"; // Redirige al carrito actualizado
     }
 
-    // Actualizar la cantidad de un producto en el carrito
     @PostMapping("/actualizarCantidad")
     public String actualizarCantidad(@RequestParam("carritoItemId") Long carritoItemId,
                                      @RequestParam("cantidad") int cantidad,
@@ -94,24 +96,23 @@ public class CarritoController {
         // Calcula el total del carrito
         double totalCarrito = carritoService.calcularTotalCarrito(carrito);
 
-        // Crear el usuario
-        User usuario = userRepository.findByUsername(user.getUsername());  // Ahora podemos usar el userRepository
+        // Obtener o crear el usuario
+        User usuario = userRepository.findByUsername(user.getUsername());
         if (usuario == null) {
             usuario = new User();
             usuario.setUsername(user.getUsername());
             usuario.setEmail(user.getEmail());
-            // Si es necesario, guarda el usuario
-            userRepository.save(usuario);
+            userRepository.save(usuario); // Guarda el usuario si no existe
         }
 
-        // Crea la venta y los detalles de la venta
+        // Crear la venta
         Venta venta = new Venta();
         venta.setCarrito(carrito);
         venta.setTotal((float) totalCarrito);
-        venta.setUsuario(usuario);  // Ahora el usuario está guardado
+        venta.setUsuario(usuario);
 
         // Crear los detalles de la venta
-        List<DetalleVenta> detalles = carritoService.obtenerItemsDelCarrito(carrito.getId()).stream()
+        List<DetalleVenta> detallesVenta = carritoService.obtenerItemsDelCarrito(carrito.getId()).stream()
                 .map(item -> {
                     DetalleVenta detalle = new DetalleVenta();
                     detalle.setCantidad(item.getCantidad());
@@ -120,11 +121,14 @@ public class CarritoController {
                     return detalle;
                 }).collect(Collectors.toList());
 
-        ventaService.crearVenta(venta, detalles);
+        // Guardar la venta y sus detalles
+        ventaService.crearVenta(venta, detallesVenta);
 
+        // Vaciar el carrito después de registrar la venta
         carritoService.vaciarCarrito(carrito);
 
-        return "redirect:/"; // Página de confirmación de pago exitosa
+        // Redirigir al controlador de factura para continuar con el proceso
+        return "redirect:/factura/generarFactura";
     }
 
     private boolean xd(double totalCarrito) {

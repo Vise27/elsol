@@ -1,26 +1,25 @@
-
 package com.example.proyecto_integrador.service;
 
-import com.example.proyecto_integrador.model.Categoria;
 import com.example.proyecto_integrador.model.Producto;
-import com.example.proyecto_integrador.repository.CategoriaRepository;
 import com.example.proyecto_integrador.repository.ProductoRepository;
-import java.util.Arrays;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 public class ProductoService {
+
     @Autowired
     private ProductoRepository productoRepository;
-    @Autowired
-    private CategoriaRepository categoriaRepository;
+
     @Autowired
     private RestTemplate restTemplate;
+
     private static final String API_URL = "https://api-zsm7.onrender.com/api/productos/";
 
     public ProductoService() {
@@ -31,53 +30,56 @@ public class ProductoService {
     }
 
     public Producto obtenerProductoPorId(Long id) {
-        return (Producto)this.productoRepository.findById(id).orElse((Producto) null);
+        return this.productoRepository.findById(id).orElse(null);
     }
-
 
     public List<Producto> obtenerProductosDesdeApi() {
         try {
-            ResponseEntity<Producto[]> response = this.restTemplate.getForEntity("https://api-zsm7.onrender.com/api/productos/", Producto[].class, new Object[0]);
+            ResponseEntity<Producto[]> response = this.restTemplate.getForEntity(API_URL, Producto[].class);
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                return Arrays.asList((Producto[])response.getBody());
+                return Arrays.asList(response.getBody());
             } else {
                 System.out.println("Error: API respondió con código no exitoso.");
                 return this.listarProductos();
             }
-        } catch (RestClientException var2) {
-            RestClientException e = var2;
+        } catch (RestClientException e) {
             System.out.println("Error al consumir la API externa: " + e.getMessage());
             return this.listarProductos();
         }
     }
 
-    public Producto obtenerProductoPorIdDesdeApi(Long id) {
+    // Aquí cambiamos el parámetro a String, ya que ahora estamos usando 'codigo' como String
+    public Producto obtenerProductoPorIdDesdeApi(String codigo) {
         try {
-            ResponseEntity<Producto> response = this.restTemplate.getForEntity("https://api-zsm7.onrender.com/api/productos/" + id, Producto.class, new Object[0]);
+            // Cambié la URL para buscar por el 'codigo' directamente en la API
+            String url = API_URL + "?codigo=" + codigo;
+            ResponseEntity<Producto> response = this.restTemplate.getForEntity(url, Producto.class);
+
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                return (Producto)response.getBody();
+                return response.getBody();
             }
-        } catch (RestClientException var3) {
-            RestClientException e = var3;
-            System.out.println("Error al consumir la API externa para obtener producto por ID: " + e.getMessage());
+        } catch (RestClientException e) {
+            System.out.println("Error al consumir la API externa para obtener producto por código: " + e.getMessage());
         }
 
-        return this.obtenerProductoPorId(id);
+        return null; // Si no se encuentra el producto en la API
     }
 
     public List<Producto> buscarProductos(String query) {
         List<Producto> productosApi = this.obtenerProductosDesdeApi();
-        return productosApi.stream().filter((p) -> {
-            return p.getNombre().toLowerCase().contains(query.toLowerCase());
-        }).toList();
+        return productosApi.stream()
+                .filter(p -> p.getNombre().toLowerCase().contains(query.toLowerCase()))
+                .toList();
     }
+
     public boolean verificarStock(Long productoId, int cantidad) {
-        Producto producto = this.obtenerProductoPorIdDesdeApi(productoId);
+        Producto producto = this.obtenerProductoPorIdDesdeApi(String.valueOf(productoId)); // Convertimos el Long a String si es necesario
         return producto != null && producto.getStock() >= cantidad;
     }
+
     public List<Producto> buscarPorCategoria(Long categoriaId) {
         try {
-            String url = API_URL + "?categoria=" + categoriaId; // Construir la URL
+            String url = API_URL + "?categoria=" + categoriaId;
             ResponseEntity<Producto[]> response = restTemplate.getForEntity(url, Producto[].class);
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 return Arrays.asList(response.getBody());
@@ -90,5 +92,4 @@ public class ProductoService {
             return List.of();
         }
     }
-
 }
