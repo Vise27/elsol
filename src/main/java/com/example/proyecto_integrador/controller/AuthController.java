@@ -21,6 +21,8 @@ public class AuthController {
 
     @Autowired
     private HttpSession httpSession;
+    @Autowired
+    private CarritoService carritoService;
 
     // Método para mostrar la vista de login (GET)
     @GetMapping("/login")
@@ -45,20 +47,18 @@ public class AuthController {
     public String showRegisterPage() {
         return "User/register";
     }
-
     @PostMapping("/register")
     public String register(@RequestParam String username, @RequestParam String password, @RequestParam String email,
-                           @RequestParam String first_name, @RequestParam String last_name, @RequestParam String role) {
-        UserDTO user = authService.register(username, password, email, first_name, last_name, role);
+                           @RequestParam String first_name, @RequestParam String last_name) {
+        UserDTO user = authService.register(username, password, email, first_name, last_name, "user");
 
         if (user != null) {
-            // Guarda el usuario y el token en la sesión
-            httpSession.setAttribute("user", user);
-            httpSession.setAttribute("token", user.getToken());
-            return "redirect:/";
+            return "redirect:/login?registered=true";
         }
-        return "redirect:/register?error=true";  // Redirige al registro con mensaje de error
+
+        return "redirect:/register?error=true";
     }
+
 
     // Método para manejar el logout (GET)
     @GetMapping("/logout")
