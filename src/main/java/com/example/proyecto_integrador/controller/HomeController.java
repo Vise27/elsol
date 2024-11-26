@@ -63,7 +63,7 @@ public class HomeController {
     public String buscarProductos(@RequestParam("query") String query, Model model) {
         List<Producto> productos = this.productoService.buscarProductos(query);
         model.addAttribute("productos", productos);
-        return "index";
+        return "productos/resultadoProducto";
     }
 
     @Generated

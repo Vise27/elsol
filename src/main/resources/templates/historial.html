@@ -34,7 +34,6 @@
     <table class="table table-bordered table-striped">
       <thead class="thead-dark">
       <tr>
-        <th>Código de Venta</th>
         <th>Fecha</th>
         <th>Total</th>
         <th>Estado</th>
@@ -42,10 +41,14 @@
       </thead>
       <tbody>
       <tr th:each="venta : ${historial}">
-        <td th:text="${venta.codigo}"></td>
         <td th:text="${venta.fecha != null ? venta.fecha.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm')) : 'Sin fecha'}"></td>
         <td th:text="'$' + ${venta.total}"></td>
         <td th:text="${venta.estado}"></td>
+        <td>
+          <a th:href="@{/historial/detalles/{id}(id=${venta.codigo})}" class="btn btn-primary btn-sm">
+            Ver Detalles
+          </a>
+        </td>
       </tr>
       </tbody>
     </table>

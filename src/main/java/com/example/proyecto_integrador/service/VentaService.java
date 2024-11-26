@@ -2,6 +2,7 @@ package com.example.proyecto_integrador.service;
 
 import com.example.proyecto_integrador.model.DetalleVenta;
 import com.example.proyecto_integrador.model.Venta;
+import com.example.proyecto_integrador.repository.DetalleVentaRepository;
 import com.example.proyecto_integrador.repository.VentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ public class VentaService {
 
     @Autowired
     private VentaRepository ventaRepository;
+    @Autowired
+    DetalleVentaRepository detalleVentaRepository;
 
     @Autowired
     private DetalleVentaService detalleVentaService;
@@ -28,6 +31,12 @@ public class VentaService {
 
     public List<Venta> obtenerHistorialPorUsuario(String username) {
         return ventaRepository.findByUsuario_Username(username);
+    }
+    public List<DetalleVenta> obtenerDetallesPorVenta(Long ventaId) {
+        return detalleVentaRepository.findByVenta_Codigo(ventaId);
+    }
+    public Venta obtenerVentaPorId(Long id) {
+        return ventaRepository.findById(id).orElse(null);
     }
 
 }

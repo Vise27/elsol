@@ -18,7 +18,9 @@ public class AutenticacionInterceptor implements HandlerInterceptor {
 
         String token = (String) request.getSession().getAttribute("token");
 
-        // Si la ruta no es pública y el usuario no tiene token, redirigir al login
+        // Si la ruta no es pública y el usuario no tiene token, redirigir al login ejemplo carrito
+        //el carrito es publica para que pueda funcionar el modal sin errores pero si quieres acceder a la vista carrito
+        //te va a pedir iniciar sesion
         if (!rutasPublicas.contains(request.getRequestURI()) && token == null) {
             response.sendRedirect("/login?message=Inicie%20sesión%20para%20acceder");
             return false;
