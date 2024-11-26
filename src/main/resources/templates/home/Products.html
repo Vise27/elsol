@@ -44,34 +44,41 @@
 </div>
 <script>
   function agregarProducto(event, form) {
-    event.preventDefault();
+    event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
 
-    const formData = new FormData(form);
+    const formData = new FormData(form); // Extrae los datos del formulario
 
     fetch('/carrito/agregar', {
       method: 'POST',
-      body: new URLSearchParams(formData), 
+      body: new URLSearchParams(formData),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     })
             .then(response => {
+              // Si el estado es 401 (usuario no autenticado), muestra el modal de inicio de sesión
               if (response.status === 401) {
-                // Si el estado es 401 (usuario no autenticado), muestra el modal de inicio de sesión
                 console.log('Usuario no autenticado, mostrando modal.');
                 mostrarModalSesion();
                 throw new Error('Usuario no autenticado');
-              } else if (!response.ok) {
-                return response.json().then(data => {
-                  throw new Error(data.message || 'Error desconocido.');
-                });
+              }
+              // Si el estado es un redireccionamiento (3xx), muestra el modal de inicio de sesión
+              else if (response.status >= 300 && response.status < 400) {
+                console.log('Redirección detectada, mostrando modal.');
+                mostrarModalSesion();
+                throw new Error('Redirección al login');
+              }
+              else if (response.ok) {
+                return response.json(); // Procesa el JSON de la respuesta
               } else {
-                return response.json(); // Si la respuesta es correcta, procesa el JSON
+                // Manejo de otros errores
+                return response.text().then(text => {
+                  throw new Error(text || 'Error desconocido.');
+                });
               }
             })
             .then(data => {
-              // Mostrar mensaje de éxito
-              alert(data.message);
+              alert(data.message); // Mostrar mensaje de éxito
             })
             .catch(error => {
               console.error('Error al agregar producto:', error.message);
@@ -117,6 +124,8 @@
     });
   }
 </script>
+
+
 
 <style>
   /* Botón de registrar en estado normal */
