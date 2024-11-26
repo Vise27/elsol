@@ -1,32 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
+  <meta charset="utf-8">
   <title>Historial de Compras</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <link href="/recursos_plantilla/css/style.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body>
-<h1>Historial de Compras</h1>
+<!-- Links comunes -->
+<div th:replace="~{home/links}"></div>
 
-<!-- Mostrar mensaje si no hay compras -->
-<p th:if="${mensaje}" th:text="${mensaje}"></p>
+<!-- Topbar -->
+<div th:replace="~{home/Topbar}"></div>
 
-<!-- Tabla para mostrar las compras -->
-<table th:if="${historial}" border="1">
-  <thead>
-  <tr>
-    <th>Código de Venta</th>
-    <th>Fecha</th>
-    <th>Total</th>
-    <th>Estado</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="venta : ${historial}">
-    <td th:text="${venta.codigo}"></td>
-    <td th:text="${venta.fecha != null ? venta.fecha.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm')) : 'Sin fecha'}"></td>
-    <td th:text="${venta.total}"></td>
-    <td th:text="${venta.estado}"></td>
-  </tr>
-  </tbody>
-</table>
+<!-- Contenedor Principal -->
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <!-- Imagen decorativa -->
+    <img src="/recursos_plantilla/img/historial_compras.png" alt="Historial de Compras" class="img-fluid" style="max-height: 150px; object-fit: cover;">
+    <h1 class="mt-3">Historial de Compras</h1>
+  </div>
+
+  <!-- Mostrar mensaje si no hay compras -->
+  <div class="alert alert-warning text-center" th:if="${mensaje}">
+    <p th:text="${mensaje}"></p>
+  </div>
+
+  <!-- Tabla para mostrar las compras -->
+  <div class="table-responsive" th:if="${historial}">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+      <tr>
+        <th>Código de Venta</th>
+        <th>Fecha</th>
+        <th>Total</th>
+        <th>Estado</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="venta : ${historial}">
+        <td th:text="${venta.codigo}"></td>
+        <td th:text="${venta.fecha != null ? venta.fecha.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm')) : 'Sin fecha'}"></td>
+        <td th:text="'$' + ${venta.total}"></td>
+        <td th:text="${venta.estado}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 </body>
+
 </html>

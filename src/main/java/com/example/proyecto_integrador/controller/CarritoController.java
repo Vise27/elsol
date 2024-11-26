@@ -137,8 +137,13 @@ public class CarritoController {
     public ResponseEntity<?> agregarProductoAlCarrito(
             @RequestParam("productoCodigo") Long productoCodigo,
             @RequestParam("cantidad") int cantidad,
-            @SessionAttribute("user") UserDTO user) {
+            @SessionAttribute(value = "user", required = false) UserDTO user) {
 
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("success", false, "message", "Debes iniciar sesión para agregar productos al carrito."));
+        }
         Producto producto = productoService.obtenerProductoPorId(productoCodigo);
 
         if (producto == null) {

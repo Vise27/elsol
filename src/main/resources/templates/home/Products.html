@@ -1,51 +1,47 @@
-
-<div class="container-fluid pt-5 pb-3">
-  <!-- Título centrado -->
-
+<div class="container-fluid pt-5 pb-3" xmlns:th="http://www.w3.org/1999/xhtml">
   <div class="row justify-content-center px-xl-5">
     <th:block th:each="producto : ${productos}">
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <div class="product-item bg-light mb-4">
-          <!-- Contenedor del producto ahora como un enlace -->
-          <a th:href="@{/home/producto/detalle/{codigo}(codigo=${producto.codigo})}">
-            <div class="product-img position-relative overflow-hidden">
-              <div class="image-container">
-                <img class="product-image" th:src="${producto.imagen}" alt="Imagen de [[${producto.nombre}]]">
-              </div>
+      <div class="col-lg-3 col-md-4 col-sm-6 pb-3">
+        <div class="product-item bg-light border rounded shadow-sm h-100 d-flex flex-column text-center">
+          <!-- Imagen del producto -->
+          <a th:href="@{/home/producto/detalle/{codigo}(codigo=${producto.codigo})}" class="d-block">
+            <div class="product-img position-relative overflow-hidden d-flex justify-content-center align-items-center"
+                 style="height: 250px; background-color: #f8f9fa;">
+              <img class="img-fluid rounded-top"
+                   th:src="${producto.imagen}"
+                   th:alt="${producto.nombre}"
+                   style="max-height: 100%; max-width: 100%; object-fit: contain;">
             </div>
-            <div class="text-start py-4 ps-4">
-              <h5 th:text="${producto.nombre}" class="fw-bold fs-5 mb-1 text-center"></h5>
-              <div class="d-flex align-items-center justify-content-start">
-                <h5 th:text="'S/' + ${producto.precio}" class="mb-0 me-4 text-danger"></h5>
-                <!--<p class="text-muted small mb-0" th:text="'Stock: ' + ${producto.stock} + ' unidades disponibles'"></p>-->
-              </div>
-            </div>
-
-
-
           </a>
 
-          <!-- Formulario para agregar al carrito -->
-          <form onsubmit="agregarProducto(event, this)" method="post">
+          <!-- Información del producto -->
+          <div class="py-3 px-3">
+            <h5 th:text="${producto.nombre}" class="fw-bold text-truncate mb-2"></h5>
+            <h6 th:text="'S/' + ${producto.precio}" class="text-danger mb-3"></h6>
+            <p class="small text-muted" th:if="${producto.stock > 0}" th:text="'Stock: ' + ${producto.stock} + ' unidades disponibles'"></p>
+            <p class="small text-danger" th:if="${producto.stock == 0}">Sin stock</p>
+          </div>
+
+          <!-- Controles de cantidad -->
+          <form onsubmit="agregarProducto(event, this)" method="post" class="mt-auto d-flex flex-column align-items-center px-3 pb-3">
             <input type="hidden" name="productoCodigo" th:value="${producto.codigo}" />
 
-            <div class="add-to-cart-container">
-              <div class="quantity-input">
-                <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.nextElementSibling.stepDown()">-</button>
-                <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" class="form-control" required />
-                <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.previousElementSibling.stepUp()">+</button>
-              </div>
-              <button type="submit" class="btn btn-outline-dark btn-square mt-3">
-                <i class="fa fa-shopping-cart"></i> Agregar al carrito
-              </button>
+            <!-- Controles de cantidad -->
+            <div class="quantity-input">
+              <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.nextElementSibling.stepDown()">-</button>
+              <input type="number" name="cantidad" value="1" min="1" max="${producto.stock}" class="form-control" required />
+              <button type="button" class="btn btn-sm" th:disabled="${producto.stock == 0}" onclick="this.previousElementSibling.stepUp()">+</button>
             </div>
+            <!-- Botón agregar al carrito -->
+            <button type="submit" class="btn btn-yellow btn-sm w-100" style="padding: 10px 0;">
+              <i class="fa fa-shopping-cart"></i> Agregar al carrito
+            </button>
           </form>
         </div>
       </div>
     </th:block>
   </div>
 </div>
-
 <script>
   function agregarProducto(event, form) {
     event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
@@ -59,15 +55,102 @@
         'Content-Type': 'application/x-www-form-urlencoded', // Configura el encabezado
       },
     })
-    .then(response => response.json())
-    .then(data => {
-      // Mostrar una notificación basada en la respuesta
-      alert(data.message);
-    })
-    .catch(error => {
-      console.error('Error al agregar producto:', error);
-      alert('Ocurrió un error al agregar el producto al carrito.');
-    });
+            .then(response => {
+              console.log("Estado de la respuesta:", response.status); // Muestra el código de estado
+
+              if (response.status === 401) {
+                // Llamar al método para mostrar el modal si no está autenticado
+                mostrarModalSesion();
+                return; // Detener el flujo aquí
+              }
+
+              if (!response.ok) {
+                throw new Error("Respuesta no válida del servidor."); // Lanzar error si no es exitosa
+              }
+
+              return response.json(); // Parsear respuesta JSON
+            })
+            .then(data => {
+              if (data) {
+                console.log("Datos recibidos del servidor:", data); // Log de datos exitosos
+                alert(data.message); // Mostrar el mensaje del backend
+              }
+            })
+            .catch(error => {
+              console.error("Error en la solicitud:", error); // Log del error
+              alert('Ocurrió un error al agregar el producto al carrito.'); // Mensaje genérico
+            });
+  }
+
+  function mostrarModalSesion() {
+    // Verificar si el modal ya está presente en el DOM
+    if (!document.getElementById('loginModal')) {
+      const modalHtml = `
+        <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+              <div class="modal-header bg-warning text-white rounded-top-4">
+                <h5 class="modal-title fw-bold" id="loginModalLabel">¡Atención!</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="modal-body text-center p-4">
+                <i class="fas fa-user-lock fa-3x text-warning mb-3"></i>
+                <p class="fs-5">Para agregar productos al carrito, es necesario iniciar sesión.</p>
+                <p class="text-muted small">Si aún no tienes una cuenta, puedes registrarte fácilmente.</p>
+              </div>
+              <div class="modal-footer justify-content-center bg-light rounded-bottom-4">
+                <a href="/login" class="btn btn-primary px-4">Iniciar Sesión</a>
+                <a href="/register" class="btn btn-outline-secondary px-4">Registrarse</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Insertar el modal en el body
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+      // Inicializar y mostrar el modal con Bootstrap
+      const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+      modal.show();
+
+      // Eliminar el modal del DOM después de cerrarlo
+      modal._element.addEventListener('hidden.bs.modal', () => {
+        modal._element.remove();
+      });
+    }
   }
 </script>
+
+
+<style>
+  /* Botón de registrar en estado normal */
+  .btn-outline-secondary {
+    background-color: #f8f9fa; /* Fondo claro */
+    color: #000; /* Texto negro */
+    border: 1px solid #6c757d; /* Borde gris */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Cambiar el estilo al pasar el mouse */
+  .btn-outline-secondary:hover {
+    background-color: #6c757d; /* Fondo gris oscuro */
+    color: #fff; /* Texto blanco */
+  }
+  /* Botón "Agregar al carrito" */
+  .btn-yellow {
+    background-color: #f8c20c; /* Fondo amarillo */
+    color: #fff; /* Texto blanco */
+    border: none; /* Sin borde */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Cambiar el estilo al pasar el mouse */
+  .btn-yellow:hover {
+    background-color: #f8a800; /* Fondo amarillo más oscuro */
+    color: #fff; /* Mantener el texto blanco */
+  }
+
+</style>
+
 
