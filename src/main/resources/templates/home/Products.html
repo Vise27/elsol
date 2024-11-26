@@ -42,6 +42,7 @@
     </th:block>
   </div>
 </div>
+
 <script>
   function agregarProducto(event, form) {
     event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
@@ -56,20 +57,21 @@
       },
     })
             .then(response => {
-              console.log("Estado de la respuesta:", response.status); // Muestra el código de estado
+              console.log("Estado de la respuesta:", response.status); // Verifica el estado de la respuesta
 
               if (response.status === 401) {
-                // Llamar al método para mostrar el modal si no está autenticado
+                console.log("No autenticado, mostrando modal."); // Log para asegurarte de que la condición 401 se activa
                 mostrarModalSesion();
                 return; // Detener el flujo aquí
               }
 
               if (!response.ok) {
-                throw new Error("Respuesta no válida del servidor."); // Lanzar error si no es exitosa
+                throw new Error("Respuesta no válida del servidor.");
               }
 
-              return response.json(); // Parsear respuesta JSON
+              return response.json();
             })
+
             .then(data => {
               if (data) {
                 console.log("Datos recibidos del servidor:", data); // Log de datos exitosos
@@ -78,7 +80,8 @@
             })
             .catch(error => {
               console.error("Error en la solicitud:", error); // Log del error
-              alert('Ocurrió un error al agregar el producto al carrito.'); // Mensaje genérico
+              mostrarModalSesion();
+              return;
             });
   }
 
