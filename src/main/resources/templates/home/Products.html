@@ -42,51 +42,45 @@
     </th:block>
   </div>
 </div>
-
 <script>
   function agregarProducto(event, form) {
-    event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
+    event.preventDefault();
 
-    const formData = new FormData(form); // Extrae los datos del formulario
+    const formData = new FormData(form);
 
     fetch('/carrito/agregar', {
       method: 'POST',
-      body: new URLSearchParams(formData), // Convierte FormData en una consulta URL
+      body: new URLSearchParams(formData), 
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded', // Configura el encabezado
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
     })
             .then(response => {
-              console.log("Estado de la respuesta:", response.status); // Verifica el estado de la respuesta
-
               if (response.status === 401) {
-                console.log("No autenticado, mostrando modal."); // Log para asegurarte de que la condición 401 se activa
+                // Si el estado es 401 (usuario no autenticado), muestra el modal de inicio de sesión
+                console.log('Usuario no autenticado, mostrando modal.');
                 mostrarModalSesion();
-                return; // Detener el flujo aquí
+                throw new Error('Usuario no autenticado');
+              } else if (!response.ok) {
+                return response.json().then(data => {
+                  throw new Error(data.message || 'Error desconocido.');
+                });
+              } else {
+                return response.json(); // Si la respuesta es correcta, procesa el JSON
               }
-
-              if (!response.ok) {
-                throw new Error("Respuesta no válida del servidor.");
-              }
-
-              return response.json();
             })
-
             .then(data => {
-              if (data) {
-                console.log("Datos recibidos del servidor:", data); // Log de datos exitosos
-                alert(data.message); // Mostrar el mensaje del backend
-              }
+              // Mostrar mensaje de éxito
+              alert(data.message);
             })
             .catch(error => {
-              console.error("Error en la solicitud:", error); // Log del error
-              mostrarModalSesion();
-              return;
+              console.error('Error al agregar producto:', error.message);
+              alert(error.message || 'Ocurrió un error al agregar el producto al carrito.');
             });
   }
 
   function mostrarModalSesion() {
-    // Verificar si el modal ya está presente en el DOM
+    // Verifica si ya existe un modal antes de agregarlo al DOM
     if (!document.getElementById('loginModal')) {
       const modalHtml = `
         <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -110,21 +104,19 @@
         </div>
       `;
 
-      // Insertar el modal en el body
       document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-      // Inicializar y mostrar el modal con Bootstrap
-      const modal = new bootstrap.Modal(document.getElementById('loginModal'));
-      modal.show();
-
-      // Eliminar el modal del DOM después de cerrarlo
-      modal._element.addEventListener('hidden.bs.modal', () => {
-        modal._element.remove();
-      });
     }
+
+    // Inicializa y muestra el modal usando Bootstrap
+    const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+    modal.show();
+
+    // Limpia el modal del DOM al cerrarse
+    modal._element.addEventListener('hidden.bs.modal', () => {
+      modal._element.remove();
+    });
   }
 </script>
-
 
 <style>
   /* Botón de registrar en estado normal */

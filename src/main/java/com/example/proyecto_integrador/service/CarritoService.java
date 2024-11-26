@@ -6,6 +6,7 @@ import com.example.proyecto_integrador.model.Producto;
 import com.example.proyecto_integrador.repository.CarritoItemRepository;
 import com.example.proyecto_integrador.repository.CarritoRepository;
 import com.example.proyecto_integrador.repository.ProductoRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -13,21 +14,17 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-
+@AllArgsConstructor
 @Service
 public class CarritoService {
 
-    @Autowired
-    private CarritoRepository carritoRepository;
+    private  final CarritoRepository carritoRepository;
 
-    @Autowired
-    private CarritoItemRepository carritoItemRepository;
+    private final CarritoItemRepository carritoItemRepository;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    @Autowired
-    private ProductoRepository productoRepository;
+    private final ProductoRepository productoRepository;
 
 
     @Autowired
@@ -83,7 +80,6 @@ public class CarritoService {
             return;
         }
 
-        // Verificar si hay suficiente stock
         if (producto.getStock() < cantidad) {
             throw new IllegalStateException("No hay suficiente stock para el producto: " + producto.getNombre());
         }

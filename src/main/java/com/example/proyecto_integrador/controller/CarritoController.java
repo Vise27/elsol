@@ -7,6 +7,7 @@ import com.example.proyecto_integrador.service.CarritoService;
 import com.example.proyecto_integrador.service.FacturaService;
 import com.example.proyecto_integrador.service.ProductoService;
 import com.example.proyecto_integrador.service.VentaService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -137,34 +138,41 @@ public class CarritoController {
     public ResponseEntity<?> agregarProductoAlCarrito(
             @RequestParam("productoCodigo") Long productoCodigo,
             @RequestParam("cantidad") int cantidad,
-            @SessionAttribute(value = "user", required = false) UserDTO user) {
+            HttpSession session) {
 
+        // Obtén el usuario desde la sesión
+        UserDTO user = (UserDTO) session.getAttribute("user");
 
         if (user == null) {
+            // Si el usuario no está autenticado, devuelve un error 401
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("success", false, "message", "Debes iniciar sesión para agregar productos al carrito."));
         }
-        Producto producto = productoService.obtenerProductoPorId(productoCodigo);
 
+        // Lógica para obtener el producto
+        Producto producto = productoService.obtenerProductoPorId(productoCodigo);
         if (producto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("success", false, "message", "El producto no existe."));
         }
 
+        // Verifica el stock y la cantidad
         if (cantidad <= 0 || producto.getStock() < cantidad) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("success", false, "message", "Cantidad inválida o no hay suficiente stock."));
         }
 
+        // Obtén el carrito del usuario
         Carrito carrito = carritoService.obtenerCarritoPorUsuario(user.getUsername());
-
         if (carrito == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("success", false, "message", "No se pudo obtener el carrito del usuario."));
         }
 
+        // Agrega el producto al carrito
         carritoService.agregarProductoAlCarrito(carrito, producto, cantidad);
 
         return ResponseEntity.ok(Map.of("success", true, "message", "Producto agregado al carrito exitosamente."));
     }
+
 }
