@@ -22,7 +22,7 @@
     </div>
     <div class="col-lg-6">
       <h1 class="mb-3" th:text="${producto.nombre}"></h1>
-      <h4 class="text-muted mb-3" th:text="'Precio: $' + ${producto.precio}"></h4>
+      <h4 class="text-muted mb-3" th:text="'Precio: S/' + ${producto.precio}"></h4>
       <p th:text="'Stock disponible: ' + ${producto.stock}"></p>
       <p>Categoria: <span th:text="${producto.categoria.tipo}"></span></p>
 

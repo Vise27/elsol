@@ -9,6 +9,7 @@ import com.example.proyecto_integrador.repository.ProductoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -166,10 +167,11 @@ public class CarritoService {
     }
 
 
-    public void vaciarCarrito(Carrito carrito) {
-        List<CarritoItem> items = carritoItemRepository.findByCarritoId(carrito.getId());
-        carritoItemRepository.deleteAll(items);
+    @Transactional
+    public void vaciarCarrito(Long carritoId) {
+        System.out.println("Vaciar carrito ID: " + carritoId);
 
+        carritoItemRepository.deleteAllByCarritoId(carritoId);
     }
 
 
