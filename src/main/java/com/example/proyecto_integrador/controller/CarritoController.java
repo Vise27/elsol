@@ -125,13 +125,14 @@ public class CarritoController {
         // Guardar la venta y sus detalles
         ventaService.crearVenta(venta, detallesVenta);
 
-
+        // Redirige a la página para generar la factura
         return "redirect:/factura/generarFactura";
     }
 
+
     private boolean xd(double totalCarrito) {
 
-        return true; // Simula un pago exitoso
+        return true;
     }
 
     @PostMapping("/agregar")

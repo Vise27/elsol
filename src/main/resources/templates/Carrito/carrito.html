@@ -52,32 +52,63 @@
                 <div class="cart-summary">
                     <h4>Total: <span class="total-price" th:text="'$' + ${totalCarrito}"></span></h4>
                     <a href="/" class="btn-back">Volver al Inicio</a>
-                    <form th:action="@{/carrito/procederPago}" method="post" style="display: inline;">
-                        <button type="submit" class="btn-checkout">Proceder al Pago</button>
-                    </form>
+
                 </div>
+                <!-- Prueba de Paypal -->
+                <div id="paypal-button-container"></div>
+                <script>
+                    paypal.Buttons({
+                        createOrder: function(data, actions) {
+                            // Crear la orden con el total del carrito
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        value: parseFloat(document.querySelector('.total-price').textContent.replace('$', '').trim())
+                                    }
+                                }]
+                            });
+                        },
+                        onApprove: function(data, actions) {
+                            // Captura el pago
+                            return actions.order.capture().then(function(detalles) {
+                                console.log("Pago aprobado:", detalles);
+
+                                // Llama al backend para proceder con el pago y generar la venta
+                                fetch('/carrito/procederPago', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        orderId: detalles.id,  // ID de la orden de PayPal
+                                        status: detalles.status // Estado del pago
+                                    })
+                                }).then(response => {
+                                    if (response.ok) {
+                                        window.location.href = '/factura/generarFactura'; // Redirige a generar la factura
+                                    } else {
+                                        throw new Error("Error al procesar el pago en el servidor.");
+                                    }
+                                }).catch(error => {
+                                    console.error("Error al procesar el pago:", error);
+                                    alert("Hubo un problema al procesar tu compra.");
+                                });
+                            });
+                        },
+                        onCancel: function(data) {
+                            alert("Pago cancelado por el usuario.");
+                        },
+                        onError: function(err) {
+                            console.error("Error en el pago:", err);
+                            alert("Ocurrió un error con PayPal. Intenta de nuevo.");
+                        }
+                    }).render('#paypal-button-container');
+                </script>
+
             </div>
 
-            <!-- Prueba de Paypal -->
-            <div id="paypal-button-container"></div>
-            <script>
-                paypal.Buttons({
-                  createOrder: function(data, actions) {
-                    return actions.order.create({
-                      purchase_units: [{
-                        amount: { value: 100 }
-                      }]
-                    });
-                  },
-                  onApprove: function(data, actions) {
-                    actions.order.capture().then(function(detalles) {});
-                  },
-                  onCancel: function(data) {
-                    alert("Pago cancelado");
-                    console.log(data);
-                  }
-                }).render('#paypal-button-container');
-            </script>
+
+
 
             <div th:if="${cartItems == null or cartItems.size() == 0}">
                 <div class="alert alert-info text-center">
