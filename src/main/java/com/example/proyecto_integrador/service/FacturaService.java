@@ -43,8 +43,7 @@
                     detalleFacturaRepository.save(detalle);
                 }
 
-                // Vaciar el carrito después de guardar la factura y los detalles
-                carritoService.vaciarCarrito(carrito.getId());
+
             } catch (Exception e) {
                 // Registrar errores
                 System.err.println("Error al crear la factura: " + e.getMessage());

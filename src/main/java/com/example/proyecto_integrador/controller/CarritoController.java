@@ -14,7 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import java.util.Collections;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -84,14 +87,15 @@ public class CarritoController {
 
     // Proceder al pago
     @PostMapping("/procederPago")
-    public String procederPago(@SessionAttribute("user") UserDTO user, Model model) {
+    public ResponseEntity<?> procederPago(@SessionAttribute("user") UserDTO user) {
         // Obtener el carrito del usuario
         Carrito carrito = carritoService.obtenerCarritoPorUsuario(user.getUsername());
 
         // Verifica que el carrito no esté vacío antes de proceder
         if (carrito == null || carritoService.obtenerItemsDelCarrito(carrito.getId()).isEmpty()) {
-            model.addAttribute("mensaje", "No se encontró el carrito o el carrito está vacío.");
-            return "redirect:/carrito"; // Redirige al carrito si está vacío
+            // Si el carrito está vacío, devolver un error en formato JSON
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("error", "No se encontró el carrito o el carrito está vacío."));
         }
 
         // Calcula el total del carrito
@@ -125,8 +129,8 @@ public class CarritoController {
         // Guardar la venta y sus detalles
         ventaService.crearVenta(venta, detallesVenta);
 
-        // Redirige a la página para generar la factura
-        return "redirect:/factura/generarFactura";
+        // Devolver un JSON con la URL de la redirección
+        return ResponseEntity.ok().body(Collections.singletonMap("redirectUrl", "/factura/generarFactura"));
     }
 
 

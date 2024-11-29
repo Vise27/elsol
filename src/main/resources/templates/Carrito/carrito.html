@@ -58,7 +58,7 @@
                 <div id="paypal-button-container"></div>
                 <script>
                     paypal.Buttons({
-                        createOrder: function(data, actions) {
+                        createOrder: function (data, actions) {
                             // Crear la orden con el total del carrito
                             return actions.order.create({
                                 purchase_units: [{
@@ -68,40 +68,39 @@
                                 }]
                             });
                         },
-                        onApprove: function(data, actions) {
-                            // Captura el pago
-                            return actions.order.capture().then(function(detalles) {
+                        onApprove: function (data, actions) {
+                            // Capturar el pago
+                            return actions.order.capture().then(function (detalles) {
                                 console.log("Pago aprobado:", detalles);
 
-                                // Llama al backend para proceder con el pago y generar la venta
+                                // Llama al backend para proceder con el pago
                                 fetch('/carrito/procederPago', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
                                     },
                                     body: JSON.stringify({
-                                        orderId: detalles.id,  // ID de la orden de PayPal
-                                        status: detalles.status // Estado del pago
+                                        orderId: detalles.id,
+                                        status: detalles.status
                                     })
-                                }).then(response => {
-                                    if (response.ok) {
-                                        window.location.href = '/factura/generarFactura'; // Redirige a generar la factura
-                                    } else {
-                                        throw new Error("Error al procesar el pago en el servidor.");
-                                    }
-                                }).catch(error => {
+                                }).then(response => response.json())
+                                    .then(data => {
+                                        if (data.redirectUrl) {
+                                            window.location.href = data.redirectUrl;
+                                        } else {
+                                            alert("Hubo un problema al procesar tu compra.");
+                                        }
+                                    }).catch(error => {
                                     console.error("Error al procesar el pago:", error);
                                     alert("Hubo un problema al procesar tu compra.");
                                 });
+
                             });
                         },
-                        onCancel: function(data) {
+                        onCancel: function (data) {
                             alert("Pago cancelado por el usuario.");
                         },
-                        onError: function(err) {
-                            console.error("Error en el pago:", err);
-                            alert("Ocurrió un error con PayPal. Intenta de nuevo.");
-                        }
+
                     }).render('#paypal-button-container');
                 </script>
 
