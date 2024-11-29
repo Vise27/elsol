@@ -169,9 +169,11 @@ public class CarritoService {
 
     @Transactional
     public void vaciarCarrito(Long carritoId) {
-        System.out.println("Vaciar carrito ID: " + carritoId);
-
         carritoItemRepository.deleteAllByCarritoId(carritoId);
+        Carrito carrito = carritoRepository.findById(carritoId).orElse(null);
+        if (carrito != null) {
+            carrito.getItems().clear(); // Limpia la lista de ítems
+        }
     }
 
 
