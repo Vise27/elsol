@@ -45,7 +45,6 @@ public class FacturaController {
         Factura factura = facturaService.crearFactura(carrito, usuario);
 
         model.addAttribute("mensaje", "Pago realizado con éxito. Número de factura: " + factura.getIdFactura());
-        carritoService.vaciarCarrito(carrito.getId()); // Vacía el carrito después de generar la factura
 
         return "redirect:/"; // Redirige a la página principal
     }

@@ -20,26 +20,34 @@
         private CarritoService carritoService;  // Inyectar el CarritoService
 
         public Factura crearFactura(Carrito carrito, User usuario) {
-            double totalCarrito = carritoService.calcularTotalCarrito(carrito);  // Cambiar a carritoService
+            Factura factura = null;
 
-            // Crear la factura
-            Factura factura = new Factura();
-            factura.setUsuario(usuario);
-            factura.setCarrito(carrito);
-            factura.setTotal(totalCarrito);
+            try {
+                double totalCarrito = carritoService.calcularTotalCarrito(carrito);
 
-            factura = facturaRepository.save(factura); // Guardar la factura
+                // Crear y guardar la factura
+                factura = new Factura();
+                factura.setUsuario(usuario);
+                factura.setCarrito(carrito);
+                factura.setTotal(totalCarrito);
+                factura = facturaRepository.save(factura);
 
-            // Crear los detalles de la factura
-            List<CarritoItem> carritoItems = carrito.getItems();
-            for (CarritoItem item : carritoItems) {
-                DetalleFactura detalle = new DetalleFactura();
-                detalle.setFactura(factura);
-                detalle.setProducto(item.getProducto());
-                detalle.setCantidad(item.getCantidad());
-                detalle.setPrecioUnitario(item.getProducto().getPrecio());
+                // Crear los detalles de la factura
+                List<CarritoItem> carritoItems = carrito.getItems();
+                for (CarritoItem item : carritoItems) {
+                    DetalleFactura detalle = new DetalleFactura();
+                    detalle.setFactura(factura);
+                    detalle.setProducto(item.getProducto());
+                    detalle.setCantidad(item.getCantidad());
+                    detalle.setPrecioUnitario(item.getProducto().getPrecio());
+                    detalleFacturaRepository.save(detalle);
+                }
 
-                detalleFacturaRepository.save(detalle); // Guardar el detalle
+                // Vaciar el carrito después de guardar la factura y los detalles
+                carritoService.vaciarCarrito(carrito.getId());
+            } catch (Exception e) {
+                // Registrar errores
+                System.err.println("Error al crear la factura: " + e.getMessage());
             }
 
             return factura;
