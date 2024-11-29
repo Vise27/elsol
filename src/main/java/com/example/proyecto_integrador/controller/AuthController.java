@@ -83,5 +83,48 @@ public class AuthController {
         }
         return "User/profile";
     }
+    // Método para mostrar la vista de edición del perfil (GET)
+    @GetMapping("/profile/edit")
+    public String editUserProfileForm(Model model) {
+        UserDTO sessionUser = (UserDTO) httpSession.getAttribute("user");
+        if (sessionUser == null) {
+            return "redirect:/login";
+        }
+
+        // Obtener los datos actuales del perfil del usuario
+        UserDTO user = authService.getUserProfile(sessionUser.getToken());
+        if (user != null) {
+            model.addAttribute("user", user);
+            return "User/editProfile";  // Vista de edición del perfil
+        } else {
+            model.addAttribute("error", "No se pudo obtener el perfil del usuario.");
+            return "redirect:/profile";  // Redirigir a la vista de perfil si hay error
+        }
+    }
+
+    // Método para guardar los cambios de edición del perfil (POST)
+    @PostMapping("/profile/edit")
+    public String saveUserProfile(@RequestParam("email") String email,
+                                  @RequestParam("firstName") String firstName,
+                                  @RequestParam("lastName") String lastName,
+                                  Model model) {
+        UserDTO sessionUser = (UserDTO) httpSession.getAttribute("user");
+        if (sessionUser == null) {
+            return "redirect:/login";
+        }
+
+        // Llamar al servicio para editar el perfil
+        UserDTO updatedUser = authService.editUserProfile(sessionUser.getToken(), email, firstName, lastName);
+
+        if (updatedUser != null) {
+            model.addAttribute("user", updatedUser);
+            model.addAttribute("success", "Perfil actualizado exitosamente.");
+            return "User/profile";  // Redirigir a la vista de perfil después de la actualización
+        } else {
+            model.addAttribute("error", "No se pudo actualizar el perfil.");
+            return "User/editProfile";  // Volver a la vista de edición si hubo error
+        }
+    }
+
 
 }

@@ -24,8 +24,11 @@ public class User {
     private boolean isActive;
     private boolean isStaff;
     private boolean isSuperuser;
+    @JoinColumn(name = "first_name")
 
     private String firstName;
+    @JoinColumn(name = "last_name")
+
     private String lastName;
     private String email;
     private String role;
