@@ -1,4 +1,4 @@
-package com.example.proyecto_integrador.Component;
+package com.example.proyecto_integrador.component;
 
 
 import org.springframework.stereotype.Component;

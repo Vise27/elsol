@@ -1,21 +1,19 @@
 package com.example.proyecto_integrador.service;
 
 import com.example.proyecto_integrador.model.Categoria;
-import com.example.proyecto_integrador.repository.CategoriaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
-
+@AllArgsConstructor
 @Service
 public class CategoriaService {
 
     private static final String API_URL = "https://api-zsm7.onrender.com/api/categorias/";
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
 
     public List<Categoria> listarCategorias() {

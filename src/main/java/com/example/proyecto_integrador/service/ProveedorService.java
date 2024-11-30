@@ -2,16 +2,16 @@ package com.example.proyecto_integrador.service;
 
 import com.example.proyecto_integrador.model.Proveedor;
 import com.example.proyecto_integrador.repository.ProveedorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ProveedorService {
 
-    @Autowired
-    private ProveedorRepository proveedorRepository;
+    private final ProveedorRepository proveedorRepository;
 
     public List<Proveedor> listarProveedores() {
         return proveedorRepository.findAll();

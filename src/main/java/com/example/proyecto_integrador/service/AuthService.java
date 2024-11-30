@@ -1,8 +1,8 @@
 package com.example.proyecto_integrador.service;
 
-import com.example.proyecto_integrador.Component.TokenManager;
+import com.example.proyecto_integrador.component.TokenManager;
 import com.example.proyecto_integrador.dto.UserDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -10,14 +10,13 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+@AllArgsConstructor
 @Service
 public class AuthService {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    @Autowired
-    private TokenManager tokenManager;
+    private final TokenManager tokenManager;
 
     private final String API_URL = "https://api-zsm7.onrender.com";  // URL base de la API de Django
 

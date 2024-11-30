@@ -4,20 +4,19 @@ import com.example.proyecto_integrador.dto.UserDTO;
 import com.example.proyecto_integrador.model.DetalleVenta;
 import com.example.proyecto_integrador.model.Venta;
 import com.example.proyecto_integrador.service.VentaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-import java.security.Principal;
 import java.util.List;
+@AllArgsConstructor
 @Controller
 public class HistorialController {
 
-    @Autowired
-    private VentaService ventaService;
+    private final VentaService ventaService;
 
     @GetMapping("/historial")
     public String mostrarHistorial(@SessionAttribute("user") UserDTO user, Model model) {

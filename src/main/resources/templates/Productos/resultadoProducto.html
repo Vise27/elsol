@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8">
@@ -29,7 +29,7 @@
         <div th:each="producto : ${productos}" class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
                 <a th:href="@{/home/producto/detalle/{codigo}(codigo=${producto.codigo})}">
-                <img th:src="${producto.imagen}" class="card-img-top" alt="Imagen del producto">
+                <img  th:src="${producto.imagen}" class="card-img-top" alt="Imagen del producto">
                 </a>
                 <div class="card-body">
                     <h4 class="card-title" th:text="${producto.nombre}"></h4>

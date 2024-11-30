@@ -7,7 +7,6 @@ import com.example.proyecto_integrador.repository.CarritoItemRepository;
 import com.example.proyecto_integrador.repository.CarritoRepository;
 import com.example.proyecto_integrador.repository.ProductoRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
@@ -28,9 +27,7 @@ public class CarritoService {
     private final ProductoRepository productoRepository;
 
 
-    @Autowired
-
-    private ProductoService productoService;
+    private final ProductoService productoService;
     private static final String PRODUCTO_API_URL = "https://api-zsm7.onrender.com/api/productos/";
 
     // Obtener el carrito de un usuario por su username
@@ -144,10 +141,6 @@ public class CarritoService {
 
         // Obtener el producto asociado al CarritoItem
         Producto producto = carritoItem.getProducto();
-        if (producto == null) {
-            System.err.println("El producto asociado no existe.");
-            return;
-        }
 
         // Calcular la diferencia entre la cantidad actual y la nueva cantidad
         int diferencia = nuevaCantidad - carritoItem.getCantidad();
@@ -169,16 +162,9 @@ public class CarritoService {
 
     @Transactional
     public void vaciarCarrito(Long carritoId) {
-        System.out.println("Iniciando transacción para vaciar carrito: " + carritoId);
         carritoItemRepository.deleteAllByCarritoId(carritoId);
-        System.out.println("Transacción completada para carrito: " + carritoId);
     }
 
 
-    //public void vaciarCarrito(Carrito carrito) {
-        // Obtener todos los items del carrito y eliminarlos de una sola vez
-     //   List<CarritoItem> items = carritoItemRepository.findByCarritoId(carrito.getId());
-       // carritoItemRepository.deleteAll(items);
 
-    //}
 }

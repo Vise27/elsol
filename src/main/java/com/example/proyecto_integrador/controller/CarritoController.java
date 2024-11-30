@@ -8,37 +8,31 @@ import com.example.proyecto_integrador.service.FacturaService;
 import com.example.proyecto_integrador.service.ProductoService;
 import com.example.proyecto_integrador.service.VentaService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
 import java.util.Collections;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+@AllArgsConstructor
 @Controller
 @RequestMapping("/carrito")
 public class CarritoController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private CarritoService carritoService;
+    private final CarritoService carritoService;
 
-    @Autowired
-    private ProductoService productoService;
+    private final ProductoService productoService;
 
-    @Autowired
-    private VentaService ventaService;
-    @Autowired
-    private FacturaService facturaService;
+    private final VentaService ventaService;
+
+    private final FacturaService facturaService;
 
     // Ver el carrito de compras
     @GetMapping
@@ -134,10 +128,7 @@ public class CarritoController {
     }
 
 
-    private boolean xd(double totalCarrito) {
 
-        return true;
-    }
 
     @PostMapping("/agregar")
     public ResponseEntity<?> agregarProductoAlCarrito(

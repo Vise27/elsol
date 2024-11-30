@@ -1,28 +1,25 @@
 package com.example.proyecto_integrador.controller;
 
 import com.example.proyecto_integrador.dto.UserDTO;
-import com.example.proyecto_integrador.model.Carrito;
 import com.example.proyecto_integrador.service.AuthService;
 import com.example.proyecto_integrador.service.CarritoService;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+@AllArgsConstructor
 @Controller
-@RequiredArgsConstructor
+
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
 
-    @Autowired
-    private HttpSession httpSession;
-    @Autowired
-    private CarritoService carritoService;
+    private final AuthService authService;
+
+    private final HttpSession httpSession;
+    private final CarritoService carritoService;
 
     // Método para mostrar la vista de login (GET)
     @GetMapping("/login")

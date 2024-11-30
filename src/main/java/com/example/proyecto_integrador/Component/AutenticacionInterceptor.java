@@ -1,4 +1,4 @@
-package com.example.proyecto_integrador.Component;
+package com.example.proyecto_integrador.component;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

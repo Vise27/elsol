@@ -3,21 +3,19 @@
     import com.example.proyecto_integrador.model.*;
     import com.example.proyecto_integrador.repository.DetalleFacturaRepository;
     import com.example.proyecto_integrador.repository.FacturaRepository;
-    import org.springframework.beans.factory.annotation.Autowired;
+    import lombok.AllArgsConstructor;
     import org.springframework.stereotype.Service;
     import java.util.List;
-
+    @AllArgsConstructor
     @Service
     public class FacturaService {
 
-        @Autowired
-        private FacturaRepository facturaRepository;
 
-        @Autowired
-        private DetalleFacturaRepository detalleFacturaRepository;
+        private final FacturaRepository facturaRepository;
 
-        @Autowired
-        private CarritoService carritoService;  // Inyectar el CarritoService
+        private final DetalleFacturaRepository detalleFacturaRepository;
+
+        private final CarritoService carritoService;  // Inyectar el CarritoService
 
         public Factura crearFactura(Carrito carrito, User usuario) {
             Factura factura = null;

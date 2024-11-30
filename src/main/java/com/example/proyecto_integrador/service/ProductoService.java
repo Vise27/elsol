@@ -2,7 +2,6 @@ package com.example.proyecto_integrador.service;
 
 import com.example.proyecto_integrador.model.Producto;
 import com.example.proyecto_integrador.repository.ProductoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -14,15 +13,16 @@ import java.util.List;
 @Service
 public class ProductoService {
 
-    @Autowired
-    private ProductoRepository productoRepository;
+    private final ProductoRepository productoRepository;
 
-    @Autowired
-    private RestTemplate restTemplate;
+
+    private final RestTemplate restTemplate;
 
     private static final String API_URL = "https://api-zsm7.onrender.com/api/productos/";
 
-    public ProductoService() {
+    public ProductoService(ProductoRepository productoRepository, RestTemplate restTemplate) {
+        this.productoRepository = productoRepository;
+        this.restTemplate = restTemplate;
     }
 
     public List<Producto> listarProductos() {

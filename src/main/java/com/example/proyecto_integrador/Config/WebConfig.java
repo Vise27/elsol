@@ -1,16 +1,16 @@
-package com.example.proyecto_integrador.Config;
+package com.example.proyecto_integrador.config;
 
-import com.example.proyecto_integrador.Component.AutenticacionInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.proyecto_integrador.component.AutenticacionInterceptor;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
+@AllArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Autowired
-    private AutenticacionInterceptor autenticacionInterceptor;
+
+    private final AutenticacionInterceptor autenticacionInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
