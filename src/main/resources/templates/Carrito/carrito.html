@@ -54,54 +54,68 @@
                     <a href="/" class="btn-back">Volver al Inicio</a>
 
                 </div>
+                <div id="loading-spinner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+                    <div class="spinner-border text-light" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+
+
                 <!-- Prueba de Paypal -->
                 <div id="paypal-button-container"></div>
-                <script>
-                    paypal.Buttons({
-                        createOrder: function (data, actions) {
-                            // Crear la orden con el total del carrito
-                            return actions.order.create({
-                                purchase_units: [{
-                                    amount: {
-                                        value: parseFloat(document.querySelector('.total-price').textContent.replace('$', '').trim())
+                <script>paypal.Buttons({
+                    createOrder: function (data, actions) {
+                        // Crear la orden con el total del carrito
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: parseFloat(document.querySelector('.total-price').textContent.replace('$', '').trim())
+                                }
+                            }]
+                        });
+                    },
+                    onApprove: function (data, actions) {
+                        // Mostrar el spinner
+                        document.getElementById('loading-spinner').style.display = 'flex';
+
+                        // Capturar el pago
+                        return actions.order.capture().then(function (detalles) {
+                            console.log("Pago aprobado:", detalles);
+
+                            // Llama al backend para proceder con el pago
+                            fetch('/carrito/procederPago', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    orderId: detalles.id,
+                                    status: detalles.status
+                                })
+                            }).then(response => response.json())
+                                .then(data => {
+                                    if (data.redirectUrl) {
+                                        window.location.href = data.redirectUrl;
+                                    } else {
+                                        alert("Hubo un problema al procesar tu compra.");
+                                        document.getElementById('loading-spinner').style.display = 'none';
                                     }
-                                }]
+                                }).catch(error => {
+                                console.error("Error al procesar el pago:", error);
+                                alert("Hubo un problema al procesar tu compra.");
+                                document.getElementById('loading-spinner').style.display = 'none';
                             });
-                        },
-                        onApprove: function (data, actions) {
-                            // Capturar el pago
-                            return actions.order.capture().then(function (detalles) {
-                                console.log("Pago aprobado:", detalles);
+                        }).catch(error => {
+                            console.error("Error al capturar el pago:", error);
+                            alert("Hubo un problema al capturar tu pago.");
+                            document.getElementById('loading-spinner').style.display = 'none';
+                        });
+                    },
+                    onCancel: function (data) {
+                        alert("Pago cancelado por el usuario.");
+                    }
+                }).render('#paypal-button-container');
 
-                                // Llama al backend para proceder con el pago
-                                fetch('/carrito/procederPago', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        orderId: detalles.id,
-                                        status: detalles.status
-                                    })
-                                }).then(response => response.json())
-                                    .then(data => {
-                                        if (data.redirectUrl) {
-                                            window.location.href = data.redirectUrl;
-                                        } else {
-                                            alert("Hubo un problema al procesar tu compra.");
-                                        }
-                                    }).catch(error => {
-                                    console.error("Error al procesar el pago:", error);
-                                    alert("Hubo un problema al procesar tu compra.");
-                                });
-
-                            });
-                        },
-                        onCancel: function (data) {
-                            alert("Pago cancelado por el usuario.");
-                        },
-
-                    }).render('#paypal-button-container');
                 </script>
 
             </div>

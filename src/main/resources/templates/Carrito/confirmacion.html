@@ -3,18 +3,29 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pago Exitoso</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
 </head>
 
 <body>
-<div th:replace="~{home/links}"></div>
+<!-- Links
+<div th:replace="~{home/links}"></div>-->
 
-<div class="container text-center py-5">
-  <h1 class="text-success">¡Pago Exitoso!</h1>
-  <p>Gracias por tu compra. Tu pedido está siendo procesado.</p>
-  <a href="/" class="btn btn-primary">Volver al Inicio</a>
+<!-- Contenido principal -->
+<div class="container d-flex flex-column align-items-center justify-content-center vh-100">
+  <div class="text-center">
+    <div class="mb-4">
+      <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+    </div>
+    <h1 class="text-success">¡Pago Exitoso!</h1>
+    <p class="lead">Gracias por tu compra. Tu pedido está siendo procesado.</p>
+    <a href="/" class="btn btn-primary mt-3">Volver al Inicio</a>
+  </div>
 </div>
 
+<!-- Iconos de Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.js"></script>
 </body>
 
 </html>

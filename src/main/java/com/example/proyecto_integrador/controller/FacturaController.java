@@ -50,7 +50,7 @@ public class FacturaController {
         model.addAttribute("mensaje", "Pago realizado con éxito. Número de factura: " + factura.getIdFactura());
 
 
-            return "redirect:/"; // Redirige a la página principal
+            return "redirect:/carrito/pago_exitoso"; // Redirige a la comfirmacio xdd
     }
 
 }

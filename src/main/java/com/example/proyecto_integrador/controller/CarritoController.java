@@ -180,4 +180,9 @@ public class CarritoController {
         return ResponseEntity.ok(Map.of("success", true, "message", "Producto agregado al carrito exitosamente."));
     }
 
+
+    @GetMapping("pago_exitoso")
+    public String pagoExitoso() {
+        return "Carrito/confirmacion";
+    }
 }
