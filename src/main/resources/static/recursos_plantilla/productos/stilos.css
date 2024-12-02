@@ -62,3 +62,25 @@
     background-color: #6c757d; /* Fondo gris oscuro */
     color: #fff; /* Texto blanco */
 }
+
+/*para el tolbar xd*/
+
+.fixed-top-bar {
+    position: fixed; /* Fija el elemento en la parte superior */
+    top: 0; /* Ubicación superior */
+    left: 0; /* Alineación a la izquierda */
+    width: 100%; /* Asegura que ocupe todo el ancho */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    background-color: #f8f9fa; /* Fondo claro para visibilidad */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+}
+body {
+    padding-top: 80px; /* Ajusta según la altura de tu barra fija */
+}
+@media (max-width: 768px) {
+    .fixed-top-bar {
+        padding: 10px; /* Ajusta el relleno para pantallas pequeñas */
+    }
+}
+
+
