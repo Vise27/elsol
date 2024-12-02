@@ -28,7 +28,7 @@ public class CarritoService {
 
 
     private final ProductoService productoService;
-    private static final String PRODUCTO_API_URL = "https://api-zsm7.onrender.com/api/productos/";
+    private static final String PRODUCTO_API_URL = "https://elsol.up.railway.app/api/productos/";
 
     // Obtener el carrito de un usuario por su username
     public Carrito obtenerCarritoPorUsuario(String username) {

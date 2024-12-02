@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class CategoriaService {
 
-    private static final String API_URL = "https://api-zsm7.onrender.com/api/categorias/";
+    private static final String API_URL = "https://elsol.up.railway.app/api/categorias/";
 
     private final RestTemplate restTemplate;
 

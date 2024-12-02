@@ -18,7 +18,7 @@ public class ProductoService {
 
     private final RestTemplate restTemplate;
 
-    private static final String API_URL = "https://api-zsm7.onrender.com/api/productos/";
+    private static final String API_URL = "https://elsol.up.railway.app/api/productos/";
 
     public ProductoService(ProductoRepository productoRepository, RestTemplate restTemplate) {
         this.productoRepository = productoRepository;
