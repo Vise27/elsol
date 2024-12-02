@@ -53,6 +53,30 @@
       </tr>
       </tbody>
     </table>
+
+    <!-- Controles de paginación -->
+    <nav aria-label="Historial Paginación" class="mt-4">
+      <ul class="pagination justify-content-center">
+        <!-- Botón "Anterior" -->
+        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+          <a class="page-link" th:href="@{/historial(page=${currentPage - 1})}" aria-label="Anterior">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+
+        <!-- Números de página -->
+        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+          <a class="page-link" th:href="@{/historial(page=${i})}" th:text="${i + 1}"></a>
+        </li>
+
+        <!-- Botón "Siguiente" -->
+        <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+          <a class="page-link" th:href="@{/historial(page=${currentPage + 1})}" aria-label="Siguiente">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>
 

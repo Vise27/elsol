@@ -24,13 +24,34 @@ public class HomeController {
         return categoriaService.listarCategorias();
     }
     @GetMapping({"/"})
-    public String listarProductos(@RequestParam(defaultValue = "0") int page,Model model) {
-
+    public String listarProductos(@RequestParam(defaultValue = "0") int page, Model model) {
         List<Producto> productos = this.productoService.obtenerProductosDesdeApi();
-        model.addAttribute("productos", productos);
+        List<Producto> productosConStock = productos.stream()
+                .filter(producto -> producto.getStock() > 0)
+                .toList();
 
-        return "index";
+        // Tamaño de la página (16 productos por página)
+        int pageSize = 16;
+        int totalPages = (int) Math.ceil((double) productosConStock.size() / pageSize);
+
+        // Validar que el número de página esté dentro del rango
+        if (page < 0) page = 0;
+        if (page >= totalPages) page = totalPages - 1;
+
+        // Obtener la sublista correspondiente a la página actual
+        int fromIndex = page * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, productosConStock.size());
+        List<Producto> productosPaginados = productosConStock.subList(fromIndex, toIndex);
+
+        // Agregar datos al modelo
+        model.addAttribute("productos", productosPaginados);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        return "index"; // Ruta a la vista del índice
     }
+
+
 
 
     @GetMapping({"/admin"})

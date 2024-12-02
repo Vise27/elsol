@@ -4,9 +4,9 @@
 
 <div class="container-fluid pt-5 pb-3" xmlns:th="http://www.w3.org/1999/xhtml">
   <div class="row justify-content-center px-xl-5">
-    <th:block th:each="producto, iterStat : ${productos}">
-      <!-- Mostrar solo los primeros 4 productos -->
-      <div th:if="${iterStat.index < 4}" class="col-lg-3 col-md-4 col-sm-6 pb-3">
+    <!-- Mostrar los productos de la página actual -->
+    <th:block th:each="producto : ${productos}">
+      <div class="col-lg-3 col-md-4 col-sm-6 pb-3">
         <div class="product-item bg-light border rounded shadow-sm h-100 d-flex flex-column text-center">
           <!-- Imagen del producto -->
           <a th:href="@{/home/producto/detalle/{codigo}(codigo=${producto.codigo})}" class="d-block">
@@ -40,6 +40,34 @@
         </div>
       </div>
     </th:block>
+  </div>
+
+  <!-- Controles de paginación -->
+  <div class="row mt-4">
+    <div class="col-lg-12 d-flex justify-content-center">
+      <nav aria-label="Paginación de productos">
+        <ul class="pagination">
+          <!-- Botón "Anterior" -->
+          <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link" th:href="@{/(page=${currentPage - 1})}" aria-label="Anterior">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+
+          <!-- Números de página -->
+          <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+            <a class="page-link" th:href="@{/(page=${i})}" th:text="${i + 1}"></a>
+          </li>
+
+          <!-- Botón "Siguiente" -->
+          <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+            <a class="page-link" th:href="@{/(page=${currentPage + 1})}" aria-label="Siguiente">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </div>
 
