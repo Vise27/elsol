@@ -9,6 +9,7 @@
 <body>
 <div th:replace="~{home/links}"></div>
 
+<div id="lottie-animation" style="width: 100%; height: 100%; background: white; position: fixed; top: 0; left: 0; z-index: 9999;"></div>
 
 <!-- Topbar Start -->
 
@@ -23,7 +24,35 @@
 
 <!-- Footer Start -->
 <div th:replace="~{home/Footer}"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Inicializa la animación
+        const animation = lottie.loadAnimation({
+            container: document.getElementById('lottie-animation'), // Contenedor de la animación
+            path: '/animations/logo.json', // Ruta al archivo JSON
+            renderer: 'svg', // Renderizador
+            loop: true, // Si la animación debe repetirse
+            autoplay: true, // Si la animación debe reproducirse automáticamente
+        });
+
+        // Tiempo visible de la animación
+        const tiempoVisible = 3000; // 3 segundos
+
+        // Ocultar la animación y mostrar el contenido principal
+        setTimeout(() => {
+            const animationContainer = document.getElementById('lottie-animation');
+            animationContainer.style.opacity = 0; // Desvanecimiento gradual
+            setTimeout(() => {
+                animationContainer.style.display = 'none'; // Ocultar completamente
+            }, 500); // Tiempo adicional para completar el desvanecimiento
+        }, tiempoVisible);
+    });
+</script>
+<script>
+    console.log('Lottie:', lottie);
+</script>
 
 </body>
 

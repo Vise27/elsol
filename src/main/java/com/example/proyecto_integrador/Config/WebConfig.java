@@ -16,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(autenticacionInterceptor)
                 .addPathPatterns("/**") // Aplica el interceptor a todas las rutas
-                .excludePathPatterns("/login", "/register","/carrito/**" ,"/home/**","/","/recursos_plantilla/**","/styles/**","/categoria/**");
+                .excludePathPatterns("/login", "/register","/carrito/**" ,"/home/**","/","/animations/**","/recursos_plantilla/**","/styles/**","/categoria/**");
     }
 }
 
