@@ -28,31 +28,33 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Inicializa la animación
-        const animation = lottie.loadAnimation({
-            container: document.getElementById('lottie-animation'), // Contenedor de la animación
-            path: '/animations/logo.json', // Ruta al archivo JSON
-            renderer: 'svg', // Renderizador
-            loop: true, // Si la animación debe repetirse
-            autoplay: true, // Si la animación debe reproducirse automáticamente
-        });
+        // Verificar si estamos en la ruta raíz "/"
+        if (window.location.pathname === '/') {
+            const animation = lottie.loadAnimation({
+                container: document.getElementById('lottie-animation'),
+                path: '/animations/logo.json',
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+            });
 
-        // Tiempo visible de la animación
-        const tiempoVisible = 3000; // 3 segundos
+            const tiempoVisible = 3000;
 
-        // Ocultar la animación y mostrar el contenido principal
-        setTimeout(() => {
-            const animationContainer = document.getElementById('lottie-animation');
-            animationContainer.style.opacity = 0; // Desvanecimiento gradual
             setTimeout(() => {
-                animationContainer.style.display = 'none'; // Ocultar completamente
-            }, 500); // Tiempo adicional para completar el desvanecimiento
-        }, tiempoVisible);
+                const animationContainer = document.getElementById('lottie-animation');
+                animationContainer.style.opacity = 0;
+                setTimeout(() => {
+                    animationContainer.style.display = 'none';
+                }, 500);
+            }, tiempoVisible);
+        } else {
+            const animationContainer = document.getElementById('lottie-animation');
+            animationContainer.style.display = 'none';
+        }
     });
 </script>
-<script>
-    console.log('Lottie:', lottie);
-</script>
+
+
 
 </body>
 
