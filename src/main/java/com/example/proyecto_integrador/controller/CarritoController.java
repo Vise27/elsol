@@ -32,28 +32,20 @@ public class CarritoController {
 
     private final VentaService ventaService;
 
-    private final FacturaService facturaService;
-
-    // Ver el carrito de compras
     @GetMapping
     public String verCarrito(@SessionAttribute("user") UserDTO user, Model model) {
         Carrito carrito = carritoService.obtenerCarritoPorUsuario(user.getUsername());
 
+        List<CarritoItem> cartItems = carritoService.obtenerItemsDelCarrito(carrito.getId());
+        double totalCarrito = carritoService.calcularTotalCarrito(carrito);
 
-        if (carrito != null) {
-            List<CarritoItem> cartItems = carritoService.obtenerItemsDelCarrito(carrito.getId());
-            double totalCarrito = carritoService.calcularTotalCarrito(carrito);
+        model.addAttribute("cartItems", cartItems);
+        model.addAttribute("totalCarrito", totalCarrito);
 
-            model.addAttribute("cartItems", cartItems);
-            model.addAttribute("totalCarrito", totalCarrito);
-        } else {
-            model.addAttribute("mensaje", "No se encontró un carrito asociado al usuario.");
-        }
 
         return "Carrito/carrito";
     }
 
-    // Eliminar un producto del carrito
     @PostMapping("/eliminar")
     public String eliminarProductoDelCarrito(@RequestParam("carritoItemId") Long carritoItemId,
                                              @SessionAttribute("user") UserDTO user) {
@@ -63,7 +55,7 @@ public class CarritoController {
             carritoService.eliminarProductoDelCarrito(carritoItem.getCarrito(), carritoItem.getProducto());
         }
 
-        return "redirect:/carrito"; // Redirige al carrito actualizado
+        return "redirect:/carrito";
     }
 
     @PostMapping("/actualizarCantidad")
@@ -76,41 +68,23 @@ public class CarritoController {
             carritoService.actualizarCantidadProducto(carritoItem, cantidad);
         }
 
-        return "redirect:/carrito"; // Redirige al carrito actualizado
+        return "redirect:/carrito";
     }
 
-    // Proceder al pago
     @PostMapping("/procederPago")
     public ResponseEntity<?> procederPago(@SessionAttribute("user") UserDTO user) {
-        // Obtener el carrito del usuario
         Carrito carrito = carritoService.obtenerCarritoPorUsuario(user.getUsername());
 
-        // Verifica que el carrito no esté vacío antes de proceder
-        if (carrito == null || carritoService.obtenerItemsDelCarrito(carrito.getId()).isEmpty()) {
-            // Si el carrito está vacío, devolver un error en formato JSON
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Collections.singletonMap("error", "No se encontró el carrito o el carrito está vacío."));
-        }
-
-        // Calcula el total del carrito
         double totalCarrito = carritoService.calcularTotalCarrito(carrito);
 
-        // Obtener o crear el usuario
         User usuario = userRepository.findByUsername(user.getUsername());
-        if (usuario == null) {
-            usuario = new User();
-            usuario.setUsername(user.getUsername());
-            usuario.setEmail(user.getEmail());
-            userRepository.save(usuario); // Guarda el usuario si no existe
-        }
 
-        // Crear la venta
+
         Venta venta = new Venta();
         venta.setCarrito(carrito);
         venta.setTotal((float) totalCarrito);
         venta.setUsuario(usuario);
 
-        // Crear los detalles de la venta
         List<DetalleVenta> detallesVenta = carritoService.obtenerItemsDelCarrito(carrito.getId()).stream()
                 .map(item -> {
                     DetalleVenta detalle = new DetalleVenta();
@@ -120,14 +94,10 @@ public class CarritoController {
                     return detalle;
                 }).collect(Collectors.toList());
 
-        // Guardar la venta y sus detalles
         ventaService.crearVenta(venta, detallesVenta);
 
-        // Devolver un JSON con la URL de la redirección
         return ResponseEntity.ok().body(Collections.singletonMap("redirectUrl", "/factura/generarFactura"));
     }
-
-
 
 
     @PostMapping("/agregar")
@@ -136,36 +106,25 @@ public class CarritoController {
             @RequestParam("cantidad") int cantidad,
             HttpSession session) {
 
-        // Obtén el usuario desde la sesión
         UserDTO user = (UserDTO) session.getAttribute("user");
 
         if (user == null) {
-            // Si el usuario no está autenticado, devuelve un error 401
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("success", false, "message", "Debes iniciar sesión para agregar productos al carrito."));
         }
 
-        // Lógica para obtener el producto
         Producto producto = productoService.obtenerProductoPorId(productoCodigo);
         if (producto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("success", false, "message", "El producto no existe."));
         }
 
-        // Verifica el stock y la cantidad
         if (cantidad <= 0 || producto.getStock() < cantidad) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("success", false, "message", "Cantidad inválida o no hay suficiente stock."));
         }
 
-        // Obtén el carrito del usuario
         Carrito carrito = carritoService.obtenerCarritoPorUsuario(user.getUsername());
-        if (carrito == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("success", false, "message", "No se pudo obtener el carrito del usuario."));
-        }
-
-        // Agrega el producto al carrito
         carritoService.agregarProductoAlCarrito(carrito, producto, cantidad);
 
         return ResponseEntity.ok(Map.of("success", true, "message", "Producto agregado al carrito exitosamente."));

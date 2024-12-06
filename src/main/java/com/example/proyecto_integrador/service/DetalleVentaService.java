@@ -11,7 +11,6 @@ public class DetalleVentaService {
 
     private final DetalleVentaRepository detalleVentaRepository;
 
-    // Crear un detalle de venta
     public DetalleVenta crearDetalleVenta(DetalleVenta detalleVenta) {
         return detalleVentaRepository.save(detalleVenta);
     }

@@ -16,9 +16,9 @@ import java.util.Map;
 @Service
 public class AuthService {
 
-    private final RestTemplate restTemplate; // Usar un RestTemplate estándar inyectado como bean
+    private final RestTemplate restTemplate;
     private final TokenManager tokenManager;
-    private final String API_URL = "https://elsol.up.railway.app"; // URL base de la API de Django
+    private final String API_URL = "https://elsol.up.railway.app";
 
     public UserDTO login(String username, String password) {
         String loginUrl = API_URL + "/api/token/";

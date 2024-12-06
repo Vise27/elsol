@@ -23,7 +23,7 @@ public class VentaService {
     public Venta crearVenta(Venta venta, List<DetalleVenta> detalles) {
         Venta ventaGuardada = ventaRepository.save(venta);  // Guarda la venta
         for (DetalleVenta detalle : detalles) {
-            detalle.setVenta(ventaGuardada);  // Asociamos cada detalle con la venta
+            detalle.setVenta(ventaGuardada);
             detalleVentaService.crearDetalleVenta(detalle);  // Guardamos cada detalle
         }
         return ventaGuardada;

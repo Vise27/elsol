@@ -30,7 +30,7 @@ public class HomeController {
                 .filter(producto -> producto.getStock() > 0)
                 .toList();
 
-        // Tamaño de la página (16 productos por página)
+        // PAGINACION
         int pageSize = 16;
         int totalPages = (int) Math.ceil((double) productosConStock.size() / pageSize);
 
@@ -48,10 +48,8 @@ public class HomeController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
 
-        return "index"; // Ruta a la vista del índice
+        return "index";
     }
-
-
 
 
     @GetMapping({"/admin"})

@@ -15,7 +15,7 @@
 
         private final DetalleFacturaRepository detalleFacturaRepository;
 
-        private final CarritoService carritoService;  // Inyectar el CarritoService
+        private final CarritoService carritoService;
 
         public Factura crearFactura(Carrito carrito, User usuario) {
             Factura factura = null;
@@ -23,7 +23,6 @@
             try {
                 double totalCarrito = carritoService.calcularTotalCarrito(carrito);
 
-                // Crear y guardar la factura
                 factura = new Factura();
                 factura.setUsuario(usuario);
                 factura.setCarrito(carrito);

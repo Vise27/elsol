@@ -57,14 +57,12 @@ public class AuthController {
     }
 
 
-    // Método para manejar el logout (GET)
     @GetMapping("/logout")
     public String logout() {
         httpSession.invalidate();
-        return "redirect:/";  // Redirige a la página de login después de cerrar sesión
+        return "redirect:/";
     }
 
-    // Método para mostrar la vista de perfil (GET)
     @GetMapping("/profile")
     public String getUserProfile(Model model) {
         UserDTO sessionUser = (UserDTO) httpSession.getAttribute("user");
@@ -80,7 +78,6 @@ public class AuthController {
         }
         return "User/profile";
     }
-    // Método para mostrar la vista de edición del perfil (GET)
     @GetMapping("/profile/edit")
     public String editUserProfileForm(Model model) {
         UserDTO sessionUser = (UserDTO) httpSession.getAttribute("user");
@@ -99,7 +96,6 @@ public class AuthController {
         }
     }
 
-    // Método para guardar los cambios de edición del perfil (POST)
     @PostMapping("/profile/edit")
     public String saveUserProfile(@RequestParam("email") String email,
                                   @RequestParam("firstName") String firstName,

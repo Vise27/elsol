@@ -30,16 +30,13 @@ public class CarritoService {
     private final ProductoService productoService;
     private static final String PRODUCTO_API_URL = "https://elsol.up.railway.app/api/productos/";
 
-    // Obtener el carrito de un usuario por su username
     public Carrito obtenerCarritoPorUsuario(String username) {
         return carritoRepository.findByUsuarioUsername(username);
     }
 
-    // Obtener todos los items del carrito
     public List<CarritoItem> obtenerItemsDelCarrito(Long carritoId) {
         List<CarritoItem> carritoItems = carritoItemRepository.findByCarritoId(carritoId);
 
-        // Enriquecer los datos de los productos con la API
         for (CarritoItem item : carritoItems) {
             Producto producto = obtenerDetallesProductoDesdeAPI(item.getProducto().getCodigo());
             if (producto != null) {
@@ -64,14 +61,12 @@ public class CarritoService {
                 return null;
             }
         } catch (RestClientException e) {
-            // Manejo de errores de la API
             System.err.println("Error al obtener el producto desde la API: " + e.getMessage());
             return null;
         }
     }
 
 
-    // Agregar un producto al carrito
     public void agregarProductoAlCarrito(Carrito carrito, Producto producto, int cantidad) {
         if (cantidad <= 0) {
             System.err.println("La cantidad no puede ser menor o igual a cero.");
@@ -82,11 +77,9 @@ public class CarritoService {
             throw new IllegalStateException("No hay suficiente stock para el producto: " + producto.getNombre());
         }
 
-        // Reducir el stock del producto
         producto.setStock(producto.getStock() - cantidad);
-        productoRepository.save(producto); // Guardar los cambios en el stock
+        productoRepository.save(producto);
 
-        // Buscar o crear el item del carrito
         CarritoItem carritoItem = carritoItemRepository.findByCarritoAndProductoCodigo(carrito, producto.getCodigo());
 
         if (carritoItem != null) {
@@ -98,8 +91,8 @@ public class CarritoService {
             carritoItem.setCantidad(cantidad);
         }
 
-        carritoItemRepository.save(carritoItem); // Guardar el item del carrito
-        carritoRepository.save(carrito);        // Asegurar que el carrito también se guarda
+        carritoItemRepository.save(carritoItem);
+        carritoRepository.save(carrito);
     }
 
     public void eliminarProductoDelCarrito(Carrito carrito, Producto producto) {
@@ -115,7 +108,6 @@ public class CarritoService {
         }
     }
 
-    // Calcular el total del carrito
     public double calcularTotalCarrito(Carrito carrito) {
         double total = 0.0;
         List<CarritoItem> items = obtenerItemsDelCarrito(carrito.getId());
@@ -127,38 +119,30 @@ public class CarritoService {
         return total;
     }
 
-    // Obtener un item del carrito por su ID
     public CarritoItem obtenerCarritoItemPorId(Long id) {
         return carritoItemRepository.findById(id).orElse(null);
     }
 
-    // Actualizar la cantidad de un producto en el carrito
     public void actualizarCantidadProducto(CarritoItem carritoItem, int nuevaCantidad) {
         if (carritoItem == null || nuevaCantidad <= 0) {
             System.err.println("La cantidad debe ser mayor que cero y el item no debe ser nulo.");
             return;
         }
 
-        // Obtener el producto asociado al CarritoItem
         Producto producto = carritoItem.getProducto();
 
-        // Calcular la diferencia entre la cantidad actual y la nueva cantidad
         int diferencia = nuevaCantidad - carritoItem.getCantidad();
 
-        // Verificar si hay suficiente stock si la diferencia es positiva (incremento de cantidad)
         if (diferencia > 0 && producto.getStock() < diferencia) {
             throw new IllegalStateException("No hay suficiente stock para ajustar la cantidad.");
         }
 
-        // Ajustar el stock del producto
         producto.setStock(producto.getStock() - diferencia);
-        productoRepository.save(producto); // Guardar los cambios en el stock
+        productoRepository.save(producto);
 
-        // Actualizar la cantidad en el CarritoItem
         carritoItem.setCantidad(nuevaCantidad);
-        carritoItemRepository.save(carritoItem); // Guardar los cambios del CarritoItem
+        carritoItemRepository.save(carritoItem);
     }
-
 
     @Transactional
     public void vaciarCarrito(Long carritoId) {

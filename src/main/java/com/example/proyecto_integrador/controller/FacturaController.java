@@ -30,21 +30,9 @@ public class FacturaController {
     public String generarFactura(@SessionAttribute("user") UserDTO user, Model model) {
         Carrito carrito = carritoService.obtenerCarritoPorUsuario(user.getUsername());
 
-        if (carrito == null || carritoService.obtenerItemsDelCarrito(carrito.getId()).isEmpty()) {
-            model.addAttribute("mensaje", "No se encontró el carrito o el carrito está vacío.");
-            return "redirect:/carrito";
-        }
 
         User usuario = userRepository.findByUsername(user.getUsername());
-        if (usuario == null) {
-            model.addAttribute("mensaje", "Usuario no encontrado.");
-            return "redirect:/login";
-        }
-
-        // Crear la factura y guardar los detalles
         Factura factura = facturaService.crearFactura(carrito, usuario);
-
-            // Vaciar el carrito después de que la factura se haya generado correctamente
         carritoService.vaciarCarrito(carrito.getId());
         model.addAttribute("mensaje", "Pago realizado con éxito. Número de factura: " + factura.getIdFactura());
 
