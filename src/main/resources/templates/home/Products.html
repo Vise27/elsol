@@ -49,23 +49,32 @@
         <ul class="pagination">
           <!-- Botón "Anterior" -->
           <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-            <a class="page-link" th:href="@{/(page=${currentPage - 1})}" aria-label="Anterior">
+            <a class="page-link"
+               th:href="${categoriaId != null} ? @{/categoria/{id}(id=${categoriaId}, page=${currentPage - 1})} : @{/(page=${currentPage - 1})}"
+               aria-label="Anterior">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
 
           <!-- Números de página -->
-          <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
-            <a class="page-link" th:href="@{/(page=${i})}" th:text="${i + 1}"></a>
+          <li class="page-item"
+              th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+              th:classappend="${i == currentPage} ? 'active'">
+            <a class="page-link"
+               th:href="${categoriaId != null} ? @{/categoria/{id}(id=${categoriaId}, page=${i})} : @{/(page=${i})}"
+               th:text="${i + 1}"></a>
           </li>
 
           <!-- Botón "Siguiente" -->
           <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
-            <a class="page-link" th:href="@{/(page=${currentPage + 1})}" aria-label="Siguiente">
+            <a class="page-link"
+               th:href="${categoriaId != null} ? @{/categoria/{id}(id=${categoriaId}, page=${currentPage + 1})} : @{/(page=${currentPage + 1})}"
+               aria-label="Siguiente">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
         </ul>
+
       </nav>
     </div>
   </div>
