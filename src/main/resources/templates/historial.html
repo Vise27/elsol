@@ -43,7 +43,7 @@
       <tbody>
       <tr th:each="venta : ${historial}">
         <td th:text="${venta.fecha != null ? venta.fecha.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm')) : 'Sin fecha'}"></td>
-        <td th:text="'S/' + ${venta.total}"></td>
+        <td th:text="'S/' + ${#numbers.formatDecimal(venta.total, 1, 'COMMA', 2, 'POINT')}"></td>
         <td th:text="${venta.estado}"></td>
         <td>
           <a th:href="@{/historial/detalles/{id}(id=${venta.codigo})}" class="btn btn-primary btn-sm">

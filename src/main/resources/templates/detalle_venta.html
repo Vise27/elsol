@@ -28,7 +28,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <p><strong>Fecha:</strong> <span th:text="${venta.fecha.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))}"></span></p>
-            <p><strong>Total:</strong> <span th:text="'S/' + ${venta.total}"></span></p>
+            <p><strong>Total:</strong> <span th:text="'S/' + ${#numbers.formatDecimal(venta.total, 1, 'COMMA', 2, 'POINT')}"></span></p>
             <p><strong>Estado:</strong> <span th:text="${venta.estado}"></span></p>
         </div>
     </div>
@@ -49,8 +49,8 @@
             <tr th:each="detalle : ${detalles}">
                 <td th:text="${detalle.producto.nombre}"></td>
                 <td th:text="${detalle.cantidad}"></td>
-                <td th:text="'S/' + ${detalle.precioUnitario}"></td>
-                <td th:text="'S/' + (${detalle.cantidad} * ${detalle.precioUnitario})"></td>
+                <td th:text="'S/' + ${#numbers.formatDecimal(detalle.precioUnitario, 1, 'COMMA', 2, 'POINT')}"></td>
+                <td th:text="'S/' + ${#numbers.formatDecimal(detalle.cantidad * detalle.precioUnitario, 1, 'COMMA', 2, 'POINT')}"></td>
             </tr>
             </tbody>
         </table>
