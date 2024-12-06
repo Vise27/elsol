@@ -31,7 +31,7 @@ public class HomeController {
                 .toList();
 
         // PAGINACION
-        int pageSize = 16;
+        int pageSize = 8;
         int totalPages = (int) Math.ceil((double) productosConStock.size() / pageSize);
 
         // Validar que el número de página esté dentro del rango

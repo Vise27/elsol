@@ -42,7 +42,7 @@ public class CategoriaController {
                 .toList();
 
         // PARA LA PAGINACION XD
-        int pageSize = 16;
+        int pageSize = 8;
         int totalPages = (int) Math.ceil((double) productosConStock.size() / pageSize);
 
         if (page < 0) page = 0;

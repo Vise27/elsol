@@ -28,8 +28,8 @@
                         <!-- Detalles del producto -->
                         <div class="cart-item-details">
                             <h5 th:text="${carritoItem.producto.nombre}"></h5>
-                            <p th:text="'Precio: $' + ${carritoItem.producto.precio}"></p>
-                            <p th:text="'Subtotal: $' + (${carritoItem.producto.precio} * ${carritoItem.cantidad})"></p>
+                            <p th:text="'Precio: S/' + ${carritoItem.producto.precio}"></p>
+                            <p th:text="'Subtotal: S/' + (${carritoItem.producto.precio} * ${carritoItem.cantidad})"></p>
                         </div>
 
                         <!-- Acciones -->

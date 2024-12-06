@@ -28,8 +28,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Verificar si estamos en la ruta raíz "/"
-        if (window.location.pathname === '/') {
+        if (window.location.pathname === '/' && !window.location.search) {
             const animation = lottie.loadAnimation({
                 container: document.getElementById('lottie-animation'),
                 path: '/animations/logo.json',

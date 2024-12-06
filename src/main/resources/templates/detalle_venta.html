@@ -28,7 +28,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <p><strong>Fecha:</strong> <span th:text="${venta.fecha.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))}"></span></p>
-            <p><strong>Total:</strong> <span th:text="'$' + ${venta.total}"></span></p>
+            <p><strong>Total:</strong> <span th:text="'S/' + ${venta.total}"></span></p>
             <p><strong>Estado:</strong> <span th:text="${venta.estado}"></span></p>
         </div>
     </div>
